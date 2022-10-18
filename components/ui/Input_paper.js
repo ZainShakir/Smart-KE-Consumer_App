@@ -9,6 +9,7 @@ const Input_paper = ({
   secure,
   onUpdateValue,
   value,
+  keyboard,
 }) => {
   const [sec, setsecure] = useState(true);
   return (
@@ -17,6 +18,7 @@ const Input_paper = ({
         style={styles.input}
         label={label}
         left={<TextInput.Icon name={icon_left} />}
+        keyboardType={keyboard}
         right={
           secure ? (
             sec ? (

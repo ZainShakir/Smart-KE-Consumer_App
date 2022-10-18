@@ -6,10 +6,10 @@ import React from "react";
 import { useFonts } from "expo-font";
 import Button from "../components/ui/Button";
 import LoginForm from "../components/forms/LoginForm";
-const login = () => {
+const Login = () => {
   return <LoginForm />;
 };
 
-export default login;
+export default Login;
 
 const styles = StyleSheet.create({});

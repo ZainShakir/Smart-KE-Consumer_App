@@ -12,8 +12,10 @@ import Flat_button from "../ui/Flat_button";
 import React from "react";
 import { useFonts } from "expo-font";
 import Button from "../ui/Button";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginForm = () => {
+  const navigation = useNavigation();
   const [loaded] = useFonts({
     RussoOne: require("../../assets/fonts/RussoOne-Regular.ttf"),
     Outfit: require("../../assets/fonts/Outfit-SemiBold.ttf"),
@@ -90,7 +92,7 @@ const LoginForm = () => {
                 font={"Outfit"}
                 wid={15}
                 color={"#F0984A"}
-                onPress={() => alert("Hello")}
+                onPress={() => navigation.navigate("Reset")} //cchange that to replace in replace you cant swipe back
               >
                 {"Forgot Your Password ?"}
               </Flat_button>
@@ -127,7 +129,7 @@ const LoginForm = () => {
                 font={"Outfit"}
                 wid={15}
                 color={"#F0984A"}
-                onPress={() => alert("Hello")}
+                onPress={() => navigation.replace("Register")} //cchange that to replace in replace you cant swipe back
               >
                 {"Register"}
               </Flat_button>
@@ -146,7 +148,6 @@ const LoginForm = () => {
           Powered By FAST FYP
         </Text>
       </ImageBackground>
-      <StatusBar style="auto" />
     </View>
   );
 };
@@ -156,6 +157,7 @@ export default LoginForm;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#66D6AE",
   },
   image: {
     flex: 1,
