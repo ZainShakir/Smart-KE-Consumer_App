@@ -10,6 +10,7 @@ const Input_paper = ({
   onUpdateValue,
   value,
   keyboard,
+  isInvalid,
 }) => {
   const [sec, setsecure] = useState(true);
   return (
@@ -44,7 +45,8 @@ const Input_paper = ({
         secureTextEntry={secure ? sec : false}
         value={value}
         onChangeText={onUpdateValue}
-        activeOutlineColor="black"
+        activeOutlineColor={"black"}
+        error={isInvalid}
       />
     </View>
   );

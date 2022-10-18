@@ -3,7 +3,26 @@ import React from "react";
 import RegisterForm from "../components/forms/RegisterForm";
 
 const Register = () => {
-  return <RegisterForm />;
+  async function registerHandler({
+    firstname,
+    lastname,
+    email,
+    password,
+    cnic,
+  }) {
+    try {
+      const token = await createUser({
+        firstname,
+        lastname,
+        email,
+        password,
+        cnic,
+      });
+    } catch (error) {
+      Alert.alert("Sign Up Failed", error.response.data);
+    }
+  }
+  return <RegisterForm onAuthenticate={registerHandler} />;
 };
 
 export default Register;

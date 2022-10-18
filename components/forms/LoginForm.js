@@ -6,15 +6,55 @@ import {
   View,
   Image,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import Input_paper from "../ui/Input_paper";
 import Flat_button from "../ui/Flat_button";
-import React from "react";
+import React, { useState } from "react";
 import { useFonts } from "expo-font";
 import Button from "../ui/Button";
 import { useNavigation } from "@react-navigation/native";
 
-const LoginForm = () => {
+const LoginForm = ({ onAuthenticate }) => {
+  const [credentialsInvalid, setCredentialsInvalid] = useState({
+    email: false,
+    password: false,
+  });
+  const [enteredEmail, setEnteredEmail] = useState("");
+  const [enteredPassword, setEnteredPassword] = useState("");
+  function submitHandler(credentials) {
+    let { email, password } = credentials;
+
+    email = email.trim();
+    password = password.trim();
+
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    const emailIsValid = reg.test(email);
+    const passwordIsValid = password.length > 5;
+
+    if (!emailIsValid || !passwordIsValid) {
+      Alert.alert("Invalid input", "Please check your entered credentials.");
+      setCredentialsInvalid({
+        email: !emailIsValid,
+        password: !passwordIsValid,
+      });
+      return;
+    }
+    onAuthenticate({ email, password });
+  }
+
+  function updateInputValueHandler(inputType, enteredValue) {
+    switch (inputType) {
+      case "email":
+        setEnteredEmail(enteredValue);
+        break;
+      case "password":
+        setEnteredPassword(enteredValue);
+        break;
+    }
+  }
+
   const navigation = useNavigation();
   const [loaded] = useFonts({
     RussoOne: require("../../assets/fonts/RussoOne-Regular.ttf"),
@@ -79,6 +119,10 @@ const LoginForm = () => {
               label={"Email"}
               icon_left={"email"}
               mode={"outlined"}
+              value={enteredEmail}
+              onUpdateValue={updateInputValueHandler.bind(this, "email")}
+              keyboard={"email-address"}
+              isInvalid={credentialsInvalid.email}
             />
             <View style={{ height: "5%" }} />
             <Input_paper
@@ -86,6 +130,9 @@ const LoginForm = () => {
               icon_left={"lock"}
               mode={"outlined"}
               secure={true}
+              onUpdateValue={updateInputValueHandler.bind(this, "password")}
+              value={enteredPassword}
+              isInvalid={credentialsInvalid.password}
             />
             <View style={{ marginTop: "6%", paddingLeft: "7%" }}>
               <Flat_button
@@ -99,7 +146,12 @@ const LoginForm = () => {
             </View>
             <View style={{ marginTop: "6%" }}>
               <Button
-                onPress={() => alert("Hello")}
+                onPress={() =>
+                  submitHandler({
+                    email: enteredEmail,
+                    password: enteredPassword,
+                  })
+                }
                 backc={"#F0984A"}
                 width={"80%"}
                 font={"Outfit"}
