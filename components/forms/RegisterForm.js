@@ -6,8 +6,9 @@ import {
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -17,7 +18,87 @@ import Input_paper from "../ui/Input_paper";
 import Flat_button from "../ui/Flat_button";
 import Button from "../ui/Button";
 
-const RegisterForm = () => {
+const RegisterForm = ({ onAuthenticate }) => {
+  const [credentialsInvalid, setCredentialsInvalid] = useState({
+    firstname: false,
+    lastname: false,
+    email: false,
+    password: false,
+    confirmpassword: false,
+    cnic: false,
+  });
+  const [enteredEmail, setEnteredEmail] = useState("");
+  const [enteredFirstname, setEnteredFirstname] = useState("");
+  const [enteredLastname, setEnteredLastname] = useState("");
+  const [enteredPassword, setEnteredPassword] = useState("");
+  const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
+  const [enteredCnic, setEnteredCnic] = useState("");
+
+  function submitHandler(credentials) {
+    let { firstname, lastname, email, password, confirmpassword, cnic } =
+      credentials;
+
+    firstname = firstname.trim();
+    lastname = lastname.trim();
+    email = email.trim();
+    password = password.trim();
+    confirmpassword = confirmpassword.trim();
+    cnic = cnic.trim();
+
+    let reg_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    let reg_cnic = /^[0-9]+$/;
+
+    const firstnameIsValid = firstname.length > 1;
+    const lastnameIsValid = lastname.length > 1;
+    const emailIsValid = reg_email.test(email);
+    const passwordIsValid = password.length > 5;
+    const passwordsAreEqual = confirmpassword === password;
+    const cnicIsValid = reg_cnic.test(cnic) && cnic.length > 11;
+
+    if (
+      !emailIsValid ||
+      !passwordIsValid ||
+      !firstnameIsValid ||
+      !lastnameIsValid ||
+      !passwordsAreEqual ||
+      !cnicIsValid
+    ) {
+      Alert.alert("Invalid input", "Please check your entered credentials.");
+      setCredentialsInvalid({
+        firstname: !firstnameIsValid,
+        lastname: !lastnameIsValid,
+        email: !emailIsValid,
+        password: !passwordIsValid,
+        confirmpassword: !passwordIsValid || !passwordsAreEqual,
+        cnic: !cnicIsValid,
+      });
+      return;
+    }
+    onAuthenticate({ firstname, lastname, email, password, cnic });
+  }
+
+  function updateInputValueHandler(inputType, enteredValue) {
+    switch (inputType) {
+      case "firstname":
+        setEnteredFirstname(enteredValue);
+        break;
+      case "lastname":
+        setEnteredLastname(enteredValue);
+        break;
+      case "email":
+        setEnteredEmail(enteredValue);
+        break;
+      case "password":
+        setEnteredPassword(enteredValue);
+        break;
+      case "confirmpassword":
+        setEnteredConfirmPassword(enteredValue);
+        break;
+      case "cnic":
+        setEnteredCnic(enteredValue);
+        break;
+    }
+  }
   const navigation = useNavigation();
   const [loaded] = useFonts({
     RussoOne: require("../../assets/fonts/RussoOne-Regular.ttf"),
@@ -61,18 +142,28 @@ const RegisterForm = () => {
                 label={"First Name"}
                 icon_left={"account"}
                 mode={"outlined"}
+                onUpdateValue={updateInputValueHandler.bind(this, "firstname")}
+                value={enteredFirstname}
+                isInvalid={credentialsInvalid.firstname}
               />
               <View style={{ height: "2%" }} />
               <Input_paper
                 label={"Last Name"}
                 icon_left={"account"}
                 mode={"outlined"}
+                onUpdateValue={updateInputValueHandler.bind(this, "lastname")}
+                value={enteredLastname}
+                isInvalid={credentialsInvalid.lastname}
               />
               <View style={{ height: "2%" }} />
               <Input_paper
                 label={"Email"}
                 icon_left={"email"}
                 mode={"outlined"}
+                onUpdateValue={updateInputValueHandler.bind(this, "email")}
+                value={enteredEmail}
+                keyboard={"email-address"}
+                isInvalid={credentialsInvalid.email}
               />
               <View style={{ height: "2%" }} />
               <Input_paper
@@ -80,6 +171,9 @@ const RegisterForm = () => {
                 icon_left={"lock"}
                 mode={"outlined"}
                 secure={true}
+                onUpdateValue={updateInputValueHandler.bind(this, "password")}
+                value={enteredPassword}
+                isInvalid={credentialsInvalid.password}
               />
               <View style={{ height: "2%" }} />
               <Input_paper
@@ -87,6 +181,12 @@ const RegisterForm = () => {
                 icon_left={"lock"}
                 mode={"outlined"}
                 secure={true}
+                onUpdateValue={updateInputValueHandler.bind(
+                  this,
+                  "confirmpassword"
+                )}
+                value={enteredConfirmPassword}
+                isInvalid={credentialsInvalid.confirmpassword}
               />
               <View style={{ height: "2%" }} />
               <Input_paper
@@ -94,10 +194,22 @@ const RegisterForm = () => {
                 icon_left={"smart-card-outline"}
                 mode={"outlined"}
                 keyboard={"numeric"}
+                onUpdateValue={updateInputValueHandler.bind(this, "cnic")}
+                value={enteredCnic}
+                isInvalid={credentialsInvalid.cnic}
               />
               <View style={{ marginTop: "6%" }}>
                 <Button
-                  onPress={() => alert("Hello")}
+                  onPress={() =>
+                    submitHandler({
+                      firstname: enteredFirstname,
+                      lastname: enteredLastname,
+                      email: enteredEmail,
+                      password: enteredPassword,
+                      confirmpassword: enteredConfirmPassword,
+                      cnic: enteredCnic,
+                    })
+                  }
                   backc={"#F0984A"}
                   width={"80%"}
                   font={"Outfit"}

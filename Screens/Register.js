@@ -11,13 +11,14 @@ const Register = () => {
     cnic,
   }) {
     try {
-      const token = await createUser({
-        firstname,
-        lastname,
-        email,
-        password,
-        cnic,
-      });
+      Alert.alert("Email:" + email + " Passsword:" + password + "Cnic:" + cnic);
+      // const token = await createUser({
+      //   firstname,
+      //   lastname,
+      //   email,
+      //   password,
+      //   cnic,
+      // });
     } catch (error) {
       Alert.alert("Sign Up Failed", error.response.data);
     }
