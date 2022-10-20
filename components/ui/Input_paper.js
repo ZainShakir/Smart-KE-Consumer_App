@@ -56,7 +56,7 @@ export default Input_paper;
 
 const styles = StyleSheet.create({
   input: {
-    width: 330,
+    width: "90%",
     backgroundColor: "#F5F5F5",
     alignSelf: "center",
     // height: 50,

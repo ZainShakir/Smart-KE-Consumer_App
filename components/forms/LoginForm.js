@@ -144,7 +144,7 @@ const LoginForm = ({ onAuthenticate }) => {
                 {"Forgot Your Password ?"}
               </Flat_button>
             </View>
-            <View style={{ marginTop: "6%" }}>
+            <View style={{ marginTop: "5%" }}>
               <Button
                 onPress={() =>
                   submitHandler({
@@ -153,7 +153,7 @@ const LoginForm = ({ onAuthenticate }) => {
                   })
                 }
                 backc={"#F0984A"}
-                width={"80%"}
+                width={"89%"}
                 font={"Outfit"}
                 fsize={15}
                 fcolor={"#FFFFFF"}
