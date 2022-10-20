@@ -135,9 +135,15 @@ const RegisterForm = ({ onAuthenticate }) => {
             style={{ flex: 1 }}
             keyboardVerticalOffset={70}
           >
-            <ScrollView>
+            <ScrollView
+              alwaysBounceVertical={false}
+              keyboardShouldPersistTaps={"never"}
+              // contentContainerStyle={{
+              //   paddingBottom: Platform.OS === "ios" ? "0%" : "25%",
+              // }}
+            >
               <Text style={styles.sub_heading}>REGISTER</Text>
-              <View style={{ height: "3%" }} />
+              <View style={{ paddingTop: "3%" }} />
               <Input_paper
                 label={"First Name"}
                 icon_left={"account"}
@@ -146,7 +152,7 @@ const RegisterForm = ({ onAuthenticate }) => {
                 value={enteredFirstname}
                 isInvalid={credentialsInvalid.firstname}
               />
-              <View style={{ height: "2%" }} />
+              <View style={{ paddingTop: "3%" }} />
               <Input_paper
                 label={"Last Name"}
                 icon_left={"account"}
@@ -155,7 +161,7 @@ const RegisterForm = ({ onAuthenticate }) => {
                 value={enteredLastname}
                 isInvalid={credentialsInvalid.lastname}
               />
-              <View style={{ height: "2%" }} />
+              <View style={{ paddingTop: "3%" }} />
               <Input_paper
                 label={"Email"}
                 icon_left={"email"}
@@ -165,7 +171,7 @@ const RegisterForm = ({ onAuthenticate }) => {
                 keyboard={"email-address"}
                 isInvalid={credentialsInvalid.email}
               />
-              <View style={{ height: "2%" }} />
+              <View style={{ paddingTop: "3%" }} />
               <Input_paper
                 label={"Password"}
                 icon_left={"lock"}
@@ -175,7 +181,7 @@ const RegisterForm = ({ onAuthenticate }) => {
                 value={enteredPassword}
                 isInvalid={credentialsInvalid.password}
               />
-              <View style={{ height: "2%" }} />
+              <View style={{ paddingTop: "3%" }} />
               <Input_paper
                 label={"Confirm Password"}
                 icon_left={"lock"}
@@ -188,7 +194,7 @@ const RegisterForm = ({ onAuthenticate }) => {
                 value={enteredConfirmPassword}
                 isInvalid={credentialsInvalid.confirmpassword}
               />
-              <View style={{ height: "2%" }} />
+              <View style={{ paddingTop: "3%" }} />
               <Input_paper
                 label={"CNIC"}
                 icon_left={"smart-card-outline"}
@@ -198,7 +204,13 @@ const RegisterForm = ({ onAuthenticate }) => {
                 value={enteredCnic}
                 isInvalid={credentialsInvalid.cnic}
               />
-              <View style={{ marginTop: "6%" }}>
+              <View
+                style={{
+                  //    padding: "5%",
+                  //   marginTop: "6%",
+                  paddingTop: "6%",
+                }}
+              >
                 <Button
                   onPress={() =>
                     submitHandler({
@@ -221,7 +233,8 @@ const RegisterForm = ({ onAuthenticate }) => {
               </View>
               <View
                 style={{
-                  marginTop: "6%",
+                  // marginTop: "6%",
+                  padding: "5%",
                   flexDirection: "row",
                   justifyContent: "center",
                 }}
