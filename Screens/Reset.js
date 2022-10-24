@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   Logo: {
     height: "30%",
-    width: "40%",
+    width: "44%",
     alignSelf: "center",
   },
   heading: {

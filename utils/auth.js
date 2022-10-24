@@ -10,7 +10,7 @@ export async function createUser({
   cnic,
 }) {
   const response = await axios.post(
-    "https://crowd-funding-api.herokuapp.com/users/register",
+    "https://keplatform.herokuapp.com/users/register",
     {
       firstname: firstname,
       lastname: lastname,
@@ -25,7 +25,7 @@ export async function createUser({
 
 export async function loginUser(email, password) {
   const response = await axios.post(
-    "https://crowd-funding-api.herokuapp.com/users/login",
+    "https://keplatform.herokuapp.com/users/login",
     {
       email: email,
       password: password,
