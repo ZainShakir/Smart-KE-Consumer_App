@@ -53,7 +53,8 @@ const RegisterForm = ({ onAuthenticate }) => {
     const emailIsValid = reg_email.test(email);
     const passwordIsValid = password.length > 5;
     const passwordsAreEqual = confirmpassword === password;
-    const cnicIsValid = reg_cnic.test(cnic) && cnic.length > 11;
+    const cnicIsValid =
+      reg_cnic.test(cnic) && cnic.length > 11 && cnic.length <= 14;
 
     if (
       !emailIsValid ||

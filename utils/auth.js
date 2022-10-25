@@ -9,8 +9,9 @@ export async function createUser({
   password,
   cnic,
 }) {
+  console.log(firstname, lastname, email, password, cnic);
   const response = await axios.post(
-    "https://keplatform.herokuapp.com/users/register",
+    "https://keplatform.herokuapp.com/consumer/register",
     {
       firstname: firstname,
       lastname: lastname,
@@ -25,7 +26,7 @@ export async function createUser({
 
 export async function loginUser(email, password) {
   const response = await axios.post(
-    "https://keplatform.herokuapp.com/users/login",
+    "https://keplatform.herokuapp.com/consumer/login",
     {
       email: email,
       password: password,

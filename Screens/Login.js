@@ -15,16 +15,17 @@ import Button from "../components/ui/Button";
 import LoginForm from "../components/forms/LoginForm";
 import { AuthContext } from "../store/auth-context";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import { loginUser } from "../utils/auth";
 const Login = () => {
   const authCtx = useContext(AuthContext);
   const [isAuthentication, setAuthentication] = useState(false);
   async function loginHandler({ email, password }) {
     setAuthentication(true);
     try {
-      Alert.alert("Email:" + email + " Passsword:" + password);
-      // const token = await loginUser(email, password);
+      const token = await loginUser(email, password);
+      authCtx.authenticate(token);
     } catch (error) {
-      Alert.alert("Login Failed", error.response.data);
+      Alert.alert("Login Failed", error.msg);
       setAuthentication(false);
     }
   }
