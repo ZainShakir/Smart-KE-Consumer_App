@@ -12,6 +12,7 @@ import Login from "./Screens/Login";
 import Register from "./Screens/Register";
 import Reset from "./Screens/Reset";
 import Home from "./Screens/Home";
+import Drawer_nav from "./Screens/Drawer_nav";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +32,16 @@ function AuthStack() {
 }
 function AuthenticatedStack() {
   const authCtx = useContext(AuthContext);
-  return <Home />;
+  return (
+    <Stack.Navigator
+      initialRouteName="Drawer_nav"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Drawer_Nav" component={Drawer_nav} />
+    </Stack.Navigator>
+  );
 }
 
 function Navigation() {
