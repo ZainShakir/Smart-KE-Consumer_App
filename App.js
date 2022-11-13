@@ -12,7 +12,11 @@ import Login from "./Screens/Login";
 import Register from "./Screens/Register";
 import Reset from "./Screens/Reset";
 import Home from "./Screens/Home";
-import Drawer_nav from "./Screens/Drawer_nav";
+import Drawer_nav from "./components/navigation/Drawer_nav";
+import WrongReading from "./components/forms/WrongReading";
+import Complain from "./Screens/Complain";
+import FaultyMeter from "./components/forms/FaultyMeter";
+import Wrong_Bill from "./components/forms/Wrong_Bill";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +44,10 @@ function AuthenticatedStack() {
       }}
     >
       <Stack.Screen name="Drawer_Nav" component={Drawer_nav} />
+      <Stack.Screen name="WrongReading" component={WrongReading} />
+      <Stack.Screen name="FaultyMeter" component={FaultyMeter} />
+      <Stack.Screen name="Wrong_Bill" component={Wrong_Bill} />
+      <Stack.Screen name="Complain" component={Complain} />
     </Stack.Navigator>
   );
 }

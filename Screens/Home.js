@@ -37,6 +37,7 @@ const Home = ({ navigation }) => {
             <Pressable onPress={() => navigation.toggleDrawer()}>
               <Entypo name="menu" size={26} color="black" />
             </Pressable>
+            <Text style={{ fontSize: 20 }}>Home</Text>
             <Pressable onPress={() => authCtx.logout()}>
               <MaterialCommunityIcons name="logout" size={26} color="black" />
             </Pressable>
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   },
   halfbody: {
     flex: 2,
-    backgroundColor: "white",
+    backgroundColor: "#F1F6F7",
     borderTopRightRadius: Platform.OS === "ios" ? "20%" : 20,
     borderTopLeftRadius: Platform.OS === "ios" ? "20%" : 20,
   },

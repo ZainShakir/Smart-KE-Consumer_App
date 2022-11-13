@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import Home from "./Home";
+import Bottom_nav from "./Bottom_nav";
 
 const Drawer = createDrawerNavigator();
 const Drawer_nav = () => {
@@ -11,9 +11,11 @@ const Drawer_nav = () => {
       initialRouteName="Home"
       screenOptions={{
         headerShown: false,
+        drawerActiveBackgroundColor: "#66D6AE",
+        drawerActiveTintColor: "black",
       }}
     >
-      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Home" component={Bottom_nav} />
     </Drawer.Navigator>
   );
 };
