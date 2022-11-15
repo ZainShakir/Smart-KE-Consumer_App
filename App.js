@@ -17,6 +17,9 @@ import WrongReading from "./components/forms/WrongReading";
 import Complain from "./Screens/Complain";
 import FaultyMeter from "./components/forms/FaultyMeter";
 import Wrong_Bill from "./components/forms/Wrong_Bill";
+import VoltageComplaint from "./components/forms/VoltageComplaint";
+import Supplyoff from "./components/forms/Supplyoff";
+import PhaseComplaint from "./components/forms/PhaseComplaint";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +51,9 @@ function AuthenticatedStack() {
       <Stack.Screen name="FaultyMeter" component={FaultyMeter} />
       <Stack.Screen name="Wrong_Bill" component={Wrong_Bill} />
       <Stack.Screen name="Complain" component={Complain} />
+      <Stack.Screen name="Volatge" component={VoltageComplaint} />
+      <Stack.Screen name="Phase" component={PhaseComplaint} />
+      <Stack.Screen name="Supply" component={Supplyoff} />
     </Stack.Navigator>
   );
 }

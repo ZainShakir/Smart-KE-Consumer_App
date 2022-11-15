@@ -4,14 +4,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 const Tab = createMaterialTopTabNavigator();
 import { Ionicons } from "@expo/vector-icons";
 import Billing_Complain from "./Billing_Complain";
+import Electricity_complain from "./Electricity_complain";
 
-const Test1 = () => {
-  return (
-    <View style={{ flex: 1, backgroundColor: "#BFEFFF" }}>
-      <Text>Hello</Text>
-    </View>
-  );
-};
 const Complain = ({ navigation }) => {
   return (
     <View style={styles.Modal}>
@@ -46,7 +40,10 @@ const Complain = ({ navigation }) => {
         }}
       />
       <Tab.Navigator keyboardDismissMode="on-drag">
-        <Tab.Screen name="Electricity Complain" component={Test1} />
+        <Tab.Screen
+          name="Electricity Complain"
+          component={Electricity_complain}
+        />
         <Tab.Screen name="Billing Complain" component={Billing_Complain} />
       </Tab.Navigator>
     </View>

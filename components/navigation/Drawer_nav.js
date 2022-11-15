@@ -3,6 +3,7 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import Bottom_nav from "./Bottom_nav";
+import Testing from "../../Screens/Testing";
 
 const Drawer = createDrawerNavigator();
 const Drawer_nav = () => {

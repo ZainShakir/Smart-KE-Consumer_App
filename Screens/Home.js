@@ -5,6 +5,9 @@ import {
   ImageBackground,
   Pressable,
   Modal,
+  ScrollView,
+  processColor,
+  Alert,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../store/auth-context";
@@ -15,10 +18,54 @@ import {
 } from "@expo/vector-icons";
 import Input_paper from "../components/ui/Input_paper";
 import Button from "../components/ui/Button";
+import Graph from "../components/ui/Graph";
+import { FontAwesome } from "@expo/vector-icons";
+
+import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
 
 const Home = ({ navigation }) => {
   const [modalIsVisible, SetModal] = useState(false);
   const authCtx = useContext(AuthContext);
+  const stripe = useStripe();
+
+  const bill_payment = async (bill_amount) => {
+    try {
+      const finalAmount = parseInt(bill_amount);
+      // console.log(finalAmount);
+      if (finalAmount < 1) return Alert.alert("You cannot donate below 1 INR");
+      const response = await fetch("http://192.168.10.4:5000/pay_bill", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: finalAmount, name: "Zain" }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return Alert.alert(data.message);
+      }
+      const initSheet = await stripe.initPaymentSheet({
+        paymentIntentClientSecret: data.clientSecret,
+        merchantDisplayName: "anything",
+      });
+      if (initSheet.error) {
+        console.error(initSheet.error);
+        return Alert.alert(initSheet.error.message);
+      }
+      const presentSheet = await stripe.presentPaymentSheet({
+        clientSecret: data.clientSecret,
+      });
+      if (presentSheet.error) {
+        console.error(presentSheet.error);
+        return Alert.alert(presentSheet.error.message);
+      }
+
+      console.log("Payment done");
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Payment failed!");
+    }
+  };
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -26,7 +73,7 @@ const Home = ({ navigation }) => {
         resizeMode="cover"
         style={styles.image}
       >
-        <View style={{ flex: 1, paddingTop: "5%" }}>
+        <View style={{ flex: 0.4, paddingTop: "5%" }}>
           <View
             style={{
               flexDirection: "row",
@@ -113,7 +160,82 @@ const Home = ({ navigation }) => {
             </Modal>
           </View>
         </View>
-        <View style={styles.halfbody}></View>
+        <ScrollView style={styles.halfbody}>
+          <ScrollView
+            alwaysBounceHorizontal={true}
+            horizontal={true}
+            nestedScrollEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            style={{ paddingVertical: 10 }}
+          >
+            <View style={styles.box}>
+              <Text>Amount Payable</Text>
+              <Text style={{ fontWeight: "600" }}>PKR</Text>
+              <Text style={{ fontWeight: "200", fontSize: 16, marginTop: 5 }}>
+                11,200.00
+              </Text>
+              <Text style={{ color: "red", fontSize: 12, marginTop: 5 }}>
+                Due Date:12/05/2020
+              </Text>
+              <StripeProvider publishableKey="pk_test_51M4Q9GJbyEqQzB0WiFHVQrrz0n7UN4Uo4iz2WUdAE0lsDLt48ssvQEfurZaQPXt1JOw26TZxtGvgtOD5MzRQmYU300QBTgjXXI">
+                <Pressable
+                  style={styles.button}
+                  onPress={() => bill_payment(11200)}
+                >
+                  <Text style={{ color: "#FFB714", alignSelf: "center" }}>
+                    Pay Now
+                  </Text>
+                </Pressable>
+              </StripeProvider>
+            </View>
+            <View style={styles.box}>
+              <Text>Current Month Units</Text>
+              <Text
+                style={{ fontSize: 20, fontWeight: "300", marginTop: "5%" }}
+              >
+                442 Units
+              </Text>
+            </View>
+            <View style={styles.box}>
+              <Text>Last Month Units</Text>
+              <Text
+                style={{ fontSize: 20, fontWeight: "300", marginTop: "5%" }}
+              >
+                442 Units
+              </Text>
+            </View>
+          </ScrollView>
+          <View
+            style={{
+              width: "100%",
+              backgroundColor: "white",
+              padding: 30,
+              shadowOpacity: 0.1,
+              shadowRadius: 3,
+              shadowOffset: { width: 0, height: 0 },
+              shadowColor: "black",
+              elevation: 5,
+            }}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold", marginBottom: 10 }}>
+                Current Power Status
+              </Text>
+              <FontAwesome name="power-off" size={120} color="red" />
+              <Text
+                style={{ fontWeight: "bold", marginBottom: 10, color: "red" }}
+              >
+                OFF
+              </Text>
+              <Text style={{ color: "orange" }}>
+                Your Area is experiancing Outages
+              </Text>
+            </View>
+          </View>
+          <View style={{ width: "100%", marginBottom: "25%" }}>
+            <Graph />
+          </View>
+        </ScrollView>
       </ImageBackground>
     </View>
   );
@@ -134,6 +256,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F6F7",
     borderTopRightRadius: Platform.OS === "ios" ? "20%" : 20,
     borderTopLeftRadius: Platform.OS === "ios" ? "20%" : 20,
+    padding: 20,
   },
   Modal: {
     justifyContent: "center",
@@ -148,5 +271,25 @@ const styles = StyleSheet.create({
     height: "35%",
     width: "90%",
     borderRadius: Platform.OS === "ios" ? "20%" : 20,
+  },
+  box: {
+    backgroundColor: "white",
+    height: 150,
+    width: 150,
+    marginHorizontal: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 0 },
+    shadowColor: "black",
+    elevation: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    borderWidth: 2,
+    borderColor: "#FFB714",
+    borderRadius: Platform.OS === "ios" ? "20%" : 20,
+    width: "50%",
+    marginTop: 5,
   },
 });
