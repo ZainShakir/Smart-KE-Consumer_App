@@ -3,7 +3,9 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import Bottom_nav from "./Bottom_nav";
-import Testing from "../../Screens/Testing";
+import Manage_Accounts from "../../Screens/Manage_Accounts";
+
+// import Testing from "../../Screens/Testing";
 
 const Drawer = createDrawerNavigator();
 const Drawer_nav = () => {
@@ -17,6 +19,7 @@ const Drawer_nav = () => {
       }}
     >
       <Drawer.Screen name="Home" component={Bottom_nav} />
+      <Drawer.Screen name="Accounts" component={Manage_Accounts} />
     </Drawer.Navigator>
   );
 };
