@@ -178,7 +178,7 @@ const Home = ({ navigation }) => {
               <Text style={{ color: "red", fontSize: 12, marginTop: 5 }}>
                 Due Date:12/05/2020
               </Text>
-              <StripeProvider publishableKey={process.env.REACT_APP_STRIPE_KEY}>
+              <StripeProvider publishableKey="pk_test_51M4Q9GJbyEqQzB0WiFHVQrrz0n7UN4Uo4iz2WUdAE0lsDLt48ssvQEfurZaQPXt1JOw26TZxtGvgtOD5MzRQmYU300QBTgjXXI">
                 <Pressable
                   style={styles.button}
                   onPress={() => bill_payment(11200)}

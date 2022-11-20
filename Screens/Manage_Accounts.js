@@ -8,6 +8,7 @@ import {
   ScrollView,
   processColor,
   Alert,
+  Image,
 } from "react-native";
 import React from "react";
 import {
@@ -15,6 +16,9 @@ import {
   Entypo,
   MaterialIcons,
 } from "@expo/vector-icons";
+
+import { SwipeListView } from "react-native-swipe-list-view";
+import Basic from "../components/ui/Account_list";
 
 const Manage_Accounts = ({ navigation }) => {
   return (
@@ -30,16 +34,16 @@ const Manage_Accounts = ({ navigation }) => {
             style={{
               position: "absolute",
               marginHorizontal: "5%",
-              marginTop: "5%",
+              marginTop: "8%",
             }}
           >
             <Entypo name="menu" size={26} color="black" />
           </Pressable>
-          <Text style={{ fontSize: 20, alignSelf: "center" }}>
+          <Text style={{ fontSize: 20, alignSelf: "center", marginTop: "3%" }}>
             Manage Accounts
           </Text>
         </View>
-        <ScrollView style={styles.halfbody}></ScrollView>
+        <Basic />
       </ImageBackground>
     </View>
   );
@@ -60,6 +64,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F6F7",
     borderTopRightRadius: Platform.OS === "ios" ? "20%" : 20,
     borderTopLeftRadius: Platform.OS === "ios" ? "20%" : 20,
-    padding: 20,
+    paddingTop: 25,
+  },
+
+  deleteButton: {
+    alignSelf: "flex-end",
+    width: 75,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
+    marginVertical: 3,
   },
 });
