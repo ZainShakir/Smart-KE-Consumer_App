@@ -20,49 +20,36 @@ import {
   Entypo,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { EditPicture, EditProfile } from "../utils/auth";
+import { AuthContext } from "../store/auth-context";
 
 const Profile = ({ navigation }) => {
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
   const edit = async () => {
-    // console.log(new Date().toString());
-    // await axios
-    //   .patch(
-    //     `https://crowd-funding-api.herokuapp.com/profile/editprofile/'sm0076@gmail.com'`,
-    //     {
-    // profilecontext.setname(name);
-    profilecontext.setcontactno(contactno);
-    profilecontext.setpassword(password);
-    //   }
-    // )
-    // .then(function (response) {
-    //   console.log(new Date().toString());
-    //   // console.log(firstname);
-    //   // console.log(lastname);
-    //   alert(response.data);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
+    try {
+      const response = await EditProfile(token, firstname, lastname, contactno);
+      profilecontext.setfirstname(firstname);
+      profilecontext.setlastname(lastname);
+      profilecontext.setcontactno(contactno);
+    } catch (error) {
+      alert(error.response.data.msg);
+    }
   };
-  // const edit_image = async () => {
-  //   await axios
-  //     .patch(
-  //       `https://crowd-funding-api.herokuapp.com/profile/editprofile/'sm0076@gmail.com'`,
-  //       {
-  //         image: profilecontext.pickedImagePath,
-  //       }
-  //     )
-  //     .then(function (response) {
-  //       alert(response.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+  const edit_image = async () => {
+    try {
+      const img = profilecontext.pickedImagePath;
+      const response = await EditPicture(token, img);
+      alert(response.data);
+    } catch (error) {
+      alert(error.response.data.msg);
+    }
+  };
   useEffect(() => {
     setfirstname(profilecontext.firstname);
+    setlastname(profilecontext.lastname);
     setcontactno(profilecontext.contactno);
     setcnic(profilecontext.cnic);
-    setpassword(profilecontext.password);
     setEmail(profilecontext.email);
   }, []);
   useEffect(() => {}, [errprompt]);
@@ -70,8 +57,6 @@ const Profile = ({ navigation }) => {
     fname: false,
     lname: false,
     contact: false,
-    pass: false,
-    cpass: false,
   });
   const profilecontext = useContext(ProfileContext);
   const [firstname, setfirstname] = useState("");
@@ -79,11 +64,9 @@ const Profile = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [text, settext] = useState(true);
   const [contactno, setcontactno] = useState("");
-  const [password, setpassword] = useState("");
   const [cnic, setcnic] = useState("");
-  const [conpass, setconpass] = useState("");
+
   const [errprompt, seterrprompt] = useState({});
-  const [sec, setsecure] = useState(true);
 
   const showImagePicker = async () => {
     profilecontext.setimageset(true);
@@ -94,18 +77,17 @@ const Profile = ({ navigation }) => {
       alert("You've refused to allow this appp to access your photos!");
       return;
     }
-    const result = await ImagePicker.launchImageLibraryAsync();
+    const result = await ImagePicker.launchImageLibraryAsync({ base64: true });
     if (!result.cancelled) {
-      profilecontext.setPickedImagePath(result);
+      profilecontext.setPickedImagePath(result.base64);
     }
   };
-  function checkcredentials(e1, e2, e3, e4, e5) {
+  function checkcredentials(e1, e2, e3) {
     var errors = {};
     const fnamenot = e1 === "";
     const lnamenot = e2 === "";
-    const connot = e3.lenght !== 11 || e3 === "";
-    const passnot = e4 === "" || (e4.length < 8 && e4.length > 15);
-    const cpassnot = e4 !== e5;
+    const connot = e3.lenght !== 11 || e3 !== "";
+
     if (e1 === "") {
       errors.firstname = "FirstName is required";
       settext(false);
@@ -114,37 +96,23 @@ const Profile = ({ navigation }) => {
       errors.lastname = "LastName is required";
       settext(false);
     }
-    if (e3.lenght !== 11) {
+    if (e3 === "") {
+    } else if (e3.length !== 11 && e3.length > 1) {
       errors.contactno = "contact number must be 11 numbers";
-      settext(false);
-    } else if (e3 === "") {
-      errors.contactno = "Contact number is required";
-      settext(false);
-    }
-    if (e4 === "") {
-      errors.password = "Password is required";
-      settext(false);
-    } else if (e4.length < 8 && e4.length > 15) {
-      errors.password = "Password length should be between 8 and 15";
-      settext(false);
-    } else if (e4 !== e5) {
-      errors.conpass = "Password didnt match";
       settext(false);
     }
     setCredentialsInvalid({
       fname: fnamenot,
       lname: lnamenot,
       contact: connot,
-      pass: passnot,
-      cpass: cpassnot,
     });
     return errors;
   }
+
   const submit = () => {
     settext(true);
-    seterrprompt(
-      checkcredentials(firstname, lastname, contactno, password, conpass)
-    );
+
+    seterrprompt(checkcredentials(firstname, lastname, contactno));
     console.log(credentialsInvalid);
     if (text) {
       edit();
@@ -162,7 +130,12 @@ const Profile = ({ navigation }) => {
       </Pressable>
       <View style={{ flex: 0.4, alignItems: "center", marginTop: "4%" }}>
         {profilecontext.pickedImagePath !== null ? (
-          <Avatar.Image size={100} source={profilecontext.pickedImagePath} />
+          <Avatar.Image
+            size={100}
+            source={{
+              uri: `data:image/gif;base64,${profilecontext.pickedImagePath}`,
+            }}
+          />
         ) : (
           <Avatar.Image size={100} source={require("../assets/Userr.png")} />
         )}
@@ -246,89 +219,7 @@ const Profile = ({ navigation }) => {
             </Text>
           </View>
         ) : null}
-        <View style={styles.row}>
-          <Text style={{ marginLeft: "3%", fontSize: 17 }}>Password : </Text>
-          <TextInput
-            value={password}
-            secureTextEntry={sec}
-            onChangeText={(element) => {
-              setpassword(element);
-            }}
-            placeholder="Enter Password"
-            style={styles.textinput}
-            right={
-              sec ? (
-                <TextInput.Icon
-                  name="eye"
-                  onPress={() => {
-                    setsecure(!sec);
-                    return false;
-                  }}
-                />
-              ) : (
-                <TextInput.Icon
-                  name="eye-off"
-                  onPress={() => {
-                    setsecure(!sec);
-                    return false;
-                  }}
-                />
-              )
-            }
-          />
-        </View>
-        {credentialsInvalid.pass ? (
-          <View style={{ marginLeft: "30%", marginTop: "1%" }}>
-            <Text style={{ color: "red", fontSize: 14, fontWeight: "bold" }}>
-              {errprompt.password}
-            </Text>
-          </View>
-        ) : null}
-        <View style={styles.row}>
-          <Text style={{ marginLeft: "3%", fontSize: 17 }}>
-            Confirm Password :
-          </Text>
-          <TextInput
-            value={conpass}
-            secureTextEntry={true}
-            onChangeText={(element) => {
-              setconpass(element);
-            }}
-            placeholder="Confirm Password"
-            style={{
-              backgroundColor: "#ffffff",
-              width: "60%",
-              height: 40,
-              paddingLeft: 10,
-            }}
-            right={
-              sec ? (
-                <TextInput.Icon
-                  name="eye"
-                  onPress={() => {
-                    setsecure(!sec);
-                    return false;
-                  }}
-                />
-              ) : (
-                <TextInput.Icon
-                  name="eye-off"
-                  onPress={() => {
-                    setsecure(!sec);
-                    return false;
-                  }}
-                />
-              )
-            }
-          />
-        </View>
-        {credentialsInvalid.cpass ? (
-          <View style={{ marginLeft: "30%", marginTop: "1%" }}>
-            <Text style={{ color: "red", fontSize: 14, fontWeight: "bold" }}>
-              {errprompt.conpass}
-            </Text>
-          </View>
-        ) : null}
+
         <View style={styles.row}>
           <Text style={{ marginLeft: "3%", fontSize: 17 }}>CNIC : </Text>
           <Text
@@ -390,7 +281,9 @@ const Profile = ({ navigation }) => {
               {profilecontext.pickedImagePath !== null ? (
                 <Avatar.Image
                   size={100}
-                  source={profilecontext.pickedImagePath}
+                  source={{
+                    uri: `data:image/gif;base64,${profilecontext.pickedImagePath}`,
+                  }}
                 />
               ) : (
                 <Avatar.Image

@@ -7,6 +7,7 @@ import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import React, { useContext, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import ProfileContext from "./store/profile-context";
+import { GetDetails } from "./utils/auth";
 
 //screens
 import Login from "./Screens/Login";
@@ -21,6 +22,7 @@ import Wrong_Bill from "./components/forms/Wrong_Bill";
 import VoltageComplaint from "./components/forms/VoltageComplaint";
 import Supplyoff from "./components/forms/Supplyoff";
 import PhaseComplaint from "./components/forms/PhaseComplaint";
+import axios from "axios";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +42,7 @@ function AuthStack() {
 }
 function AuthenticatedStack() {
   const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
   const [Is_data, SetIs_data] = useState(true);
   const [imageset, setimageset] = useState(true);
   const [email, setEmail] = useState("");
@@ -49,7 +52,6 @@ function AuthenticatedStack() {
   const [lastname, setlastname] = useState("");
   const [contactno, setcontactno] = useState("");
   const [cnic, setcnic] = useState("");
-  const [password, setpassword] = useState("");
   const imagesettings = {
     imageset,
     setimageset,
@@ -57,6 +59,8 @@ function AuthenticatedStack() {
     setfirstname,
     lastname,
     setlastname,
+    contactno,
+    setcontactno,
     email,
     setEmail,
     check,
@@ -65,38 +69,31 @@ function AuthenticatedStack() {
     setPickedImagePath,
     Is_data,
     SetIs_data,
-    contactno,
-    setcontactno,
     cnic,
     setcnic,
-    password,
-    setpassword,
   };
   const integratee = async () => {
-    //await axios
-    // .get(
-    //   `https://crowd-funding-api.herokuapp.com/profile/useprofile/'sm0076@gmail.com'`
-    // )
-    // .then(function (response) {
-    //   let tempp = response.data[0];
-    // console.log(tempp.first_name);
-    setfirstname("Zain");
-    setEmail("shakir.com");
-    setcontactno("03102149618");
-    setcnic("421015");
-    setpassword("zain1234");
+    try {
+      const response = await GetDetails(token);
+      const temp = response.data[0];
+      console.log(temp);
+      setfirstname(temp.first_name);
+      setlastname(temp.last_name);
+      if (temp.contactno === undefined) {
+        setcontactno("");
+      } else {
+        setcontactno(temp.contactno);
+      }
 
-    // setPickedImagePath(tempp.C_IMAGE);
-    // SetIs_data(true);
-    // console.log(tempp.C_IMAGE);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
+      setEmail(temp.email);
+      setcnic(temp.cnic);
+      setPickedImagePath(temp.photo);
+    } catch (error) {
+      console.log(error.response.data.msg);
+    }
   };
   useEffect(() => {
     integratee();
-    // console.log(temp[0]);
   }, []);
 
   return (

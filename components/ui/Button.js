@@ -2,7 +2,16 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
 import { useFonts } from "expo-font";
 
-const Button = ({ onPress, children, backc, width, font, fsize, fcolor }) => {
+const Button = ({
+  onPress,
+  children,
+  backc,
+  width,
+  font,
+  fsize,
+  fcolor,
+  isdis,
+}) => {
   const [loaded] = useFonts({
     RussoOne: require("../../assets/fonts/RussoOne-Regular.ttf"),
     Outfit: require("../../assets/fonts/Outfit-SemiBold.ttf"),
@@ -19,6 +28,7 @@ const Button = ({ onPress, children, backc, width, font, fsize, fcolor }) => {
         pressed && styles.pressed,
         { width: width, alignSelf: "center" },
       ]}
+      disabled={isdis}
     >
       <View style={[styles.button, { backgroundColor: backc }]}>
         <Text

@@ -6,6 +6,7 @@ import Bottom_nav from "./Bottom_nav";
 import Manage_Accounts from "../../Screens/Manage_Accounts";
 import Manage_Complains from "../../Screens/Manage_Complains";
 import Profile from "../../Screens/Profile";
+import DrawerContent from "./DrawerContent";
 
 // import Testing from "../../Screens/Testing";
 
@@ -16,9 +17,10 @@ const Drawer_nav = () => {
       initialRouteName="Home"
       screenOptions={{
         headerShown: false,
-        drawerActiveBackgroundColor: "#66D6AE",
-        drawerActiveTintColor: "black",
+        // drawerActiveBackgroundColor: "#66D6AE",
+        // drawerActiveTintColor: "black",
       }}
+      drawerContent={(props) => <DrawerContent {...props} />}
     >
       <Drawer.Screen name="Home" component={Bottom_nav} />
       <Drawer.Screen name="Manage Accounts" component={Manage_Accounts} />

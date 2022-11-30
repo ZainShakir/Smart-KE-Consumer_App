@@ -18,6 +18,7 @@ import Home from "../../Screens/Home";
 import Track from "../../Screens/Track";
 import Complain from "../../Screens/Complain";
 import { useNavigation } from "@react-navigation/native";
+import Billing from "../../Screens/Billing";
 const Test1 = () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#BFEFFF" }}>
@@ -45,16 +46,16 @@ const Bottom_nav = () => {
     let icon = "";
 
     switch (routeName) {
-      case "Hom":
+      case "Account":
         icon = "ios-home-outline";
         break;
-      case "title2":
+      case "Chat":
         icon = "ios-chatbox-ellipses-outline";
         break;
-      case "Track":
+      case "Track Driver":
         icon = "ios-map-outline";
         break;
-      case "title4":
+      case "Billing":
         icon = "ios-newspaper-outline";
         break;
     }
@@ -78,6 +79,14 @@ const Bottom_nav = () => {
         }}
       >
         {_renderIcon(routeName, selectedTab)}
+        <Text
+          style={{
+            fontSize: 12,
+            color: routeName === selectedTab ? "black" : "gray",
+          }}
+        >
+          {routeName}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -92,7 +101,7 @@ const Bottom_nav = () => {
         height={55}
         circleWidth={55}
         bgColor="white"
-        initialRouteName="Hom"
+        initialRouteName="Account"
         borderTopLeftRight
         renderCircle={({ selectedTab, navigate }) => (
           <Animated.View style={styles.btnCircle}>
@@ -120,19 +129,23 @@ const Bottom_nav = () => {
         )}
         tabBar={renderTabBar}
       >
-        <CurvedBottomBar.Screen name="Hom" position="LEFT" component={Home} />
         <CurvedBottomBar.Screen
-          name="Track"
+          name="Account"
+          position="LEFT"
+          component={Home}
+        />
+        <CurvedBottomBar.Screen
+          name="Track Driver"
           component={Track}
           position="LEFT"
         />
         <CurvedBottomBar.Screen
-          name="title4"
-          component={Test2}
+          name="Billing"
+          component={Billing}
           position="RIGHT"
         />
         <CurvedBottomBar.Screen
-          name="title2"
+          name="Chat"
           component={Test2}
           position="RIGHT"
         />
