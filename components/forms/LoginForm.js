@@ -60,6 +60,7 @@ const LoginForm = ({ onAuthenticate }) => {
     RussoOne: require("../../assets/fonts/RussoOne-Regular.ttf"),
     Outfit: require("../../assets/fonts/Outfit-SemiBold.ttf"),
     Outfit_reg: require("../../assets/fonts/Outfit-Regular.ttf"),
+    Roboto: require("../../assets/fonts/RobotoSlab-VariableFont_wght.ttf"),
   });
 
   if (!loaded) {

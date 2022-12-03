@@ -8,8 +8,9 @@ import {
   ScrollView,
   processColor,
   Alert,
+  ActivityIndicator,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../store/auth-context";
 import {
   MaterialCommunityIcons,
@@ -20,12 +21,72 @@ import Input_paper from "../components/ui/Input_paper";
 import Button from "../components/ui/Button";
 import Graph from "../components/ui/Graph";
 import { FontAwesome } from "@expo/vector-icons";
+import { get_prime, add_acc } from "../utils/auth";
+import Add_account from "../components/forms/Add_account";
 
 import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
 
 const Home = ({ navigation }) => {
   const [modalIsVisible, SetModal] = useState(false);
   const authCtx = useContext(AuthContext);
+  const [acc_name, setacc] = useState("");
+  const [address, setAddress] = useState("");
+  const [acc_no, set_accno] = useState("");
+  const [loader1, setloader1] = useState(false);
+
+  const [name, setname] = useState("");
+  const [accnum, setaccnum] = useState("");
+
+  function submit(credentials) {
+    let { accnum, name } = credentials;
+    accnum = accnum.trim();
+    name = name.trim();
+
+    const numberisValid = accnum.length > 1;
+    const nameisValid = name.length > 4;
+    if (!numberisValid || !nameisValid) {
+      Alert.alert("Invalid input", "Please check your entered credentials.");
+      return;
+    }
+    Add_Account({ accnum, name });
+  }
+
+  async function Add_Account({ accnum, name }) {
+    const token = authCtx.token;
+    try {
+      const response = await add_acc(token, accnum, name, false);
+      if (response.status == 201) {
+        alert(response.data);
+      } else {
+        alert(response.data);
+      }
+      setaccnum("");
+      setname("");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const get_prime1 = async () => {
+    const token = authCtx.token;
+    try {
+      setloader1(true);
+      const response = await get_prime(token);
+      if (response.status == 200) {
+        const temp = response.data[0];
+        setacc(temp.acc_name);
+        setAddress(temp.c_address);
+        set_accno(temp.account_no);
+      }
+      setloader1(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    get_prime1();
+  }, []);
+
   const stripe = useStripe();
 
   const bill_payment = async (bill_amount) => {
@@ -67,6 +128,7 @@ const Home = ({ navigation }) => {
       Alert.alert("Payment failed!");
     }
   };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -91,10 +153,30 @@ const Home = ({ navigation }) => {
             </Pressable>
           </View>
           <View style={{ paddingHorizontal: "5%", paddingTop: "5%" }}>
-            <Text style={{ fontSize: 24 }}>Hello Zain Shakir</Text>
+            <Text style={{ fontSize: 24 }}>
+              Hello{" "}
+              {loader1 ? (
+                <ActivityIndicator
+                  size="small"
+                  color="white"
+                  style={{ paddingLeft: 20 }}
+                />
+              ) : (
+                acc_name
+              )}
+            </Text>
             <View style={{ height: "10%" }} />
             <Text style={{ fontSize: 20 }}>
-              Address: R-264 Block 17 Fb-Area
+              Address:{" "}
+              {loader1 ? (
+                <ActivityIndicator
+                  size="small"
+                  color="white"
+                  style={{ paddingLeft: 20 }}
+                />
+              ) : (
+                address
+              )}
             </Text>
             <View style={{ height: "10%" }} />
             <View
@@ -103,7 +185,18 @@ const Home = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={{ fontSize: 20 }}>Account No:</Text>
+              <Text style={{ fontSize: 20 }}>
+                Account No:
+                {loader1 ? (
+                  <ActivityIndicator
+                    size="small"
+                    color="white"
+                    style={{ paddingLeft: 20 }}
+                  />
+                ) : (
+                  acc_no
+                )}
+              </Text>
               <Pressable onPress={() => SetModal(true)}>
                 <MaterialIcons name="add" size={26} color="black" />
               </Pressable>
@@ -139,14 +232,33 @@ const Home = ({ navigation }) => {
                       label={"Account Number"}
                       icon_left={"account-circle"}
                       mode={"outlined"}
-                      //   value={enteredEmail}
-                      //onUpdateValue={updateInputValueHandler.bind(this, "email")}
+                      value={accnum}
+                      onUpdateValue={(x) => {
+                        setaccnum(x);
+                      }}
                       keyboard={"numeric"}
+                      // isInvalid={credentialsInvalid.email}
+                    />
+                    <View style={{ height: "10%" }} />
+                    <Input_paper
+                      label={"Account Name"}
+                      icon_left={"account-circle"}
+                      mode={"outlined"}
+                      value={name}
+                      onUpdateValue={(y) => {
+                        setname(y);
+                      }}
+
                       // isInvalid={credentialsInvalid.email}
                     />
                     <View style={{ height: "15%" }} />
                     <Button
-                      onPress={() => alert("Button Pressed")}
+                      onPress={() =>
+                        submit({
+                          accnum: accnum,
+                          name: name,
+                        })
+                      }
                       backc={"#F0984A"}
                       width={"50%"}
                       font={"Outfit"}
@@ -269,7 +381,7 @@ const styles = StyleSheet.create({
   },
   modal_body: {
     backgroundColor: "white",
-    height: "35%",
+    height: "50%",
     width: "90%",
     borderRadius: Platform.OS === "ios" ? "20%" : 20,
   },

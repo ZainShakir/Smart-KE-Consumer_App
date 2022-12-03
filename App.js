@@ -7,7 +7,8 @@ import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import React, { useContext, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import ProfileContext from "./store/profile-context";
-import { GetDetails } from "./utils/auth";
+import { GetDetails, check_prime } from "./utils/auth";
+import LoadingOverlay from "./components/ui/LoadingOverlay";
 
 //screens
 import Login from "./Screens/Login";
@@ -23,6 +24,7 @@ import VoltageComplaint from "./components/forms/VoltageComplaint";
 import Supplyoff from "./components/forms/Supplyoff";
 import PhaseComplaint from "./components/forms/PhaseComplaint";
 import axios from "axios";
+import Add_account from "./components/forms/Add_account";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +44,6 @@ function AuthStack() {
 }
 function AuthenticatedStack() {
   const authCtx = useContext(AuthContext);
-  const token = authCtx.token;
   const [Is_data, SetIs_data] = useState(true);
   const [imageset, setimageset] = useState(true);
   const [email, setEmail] = useState("");
@@ -52,6 +53,8 @@ function AuthenticatedStack() {
   const [lastname, setlastname] = useState("");
   const [contactno, setcontactno] = useState("");
   const [cnic, setcnic] = useState("");
+  const [loading, setloading] = useState(false);
+
   const imagesettings = {
     imageset,
     setimageset,
@@ -72,11 +75,34 @@ function AuthenticatedStack() {
     cnic,
     setcnic,
   };
+  const get_prime = async () => {
+    let isUnmounted = false;
+    const token = authCtx.token;
+    try {
+      setloading(true);
+      const response = await check_prime(token);
+      if (!isUnmounted) {
+        if (response.status === 200) {
+          authCtx.setprimary(true);
+        } else {
+          console.log(response.data);
+        }
+        setloading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return () => {
+      isUnmounted = true;
+    };
+  };
+
   const integratee = async () => {
+    const token = authCtx.token;
+
     try {
       const response = await GetDetails(token);
       const temp = response.data[0];
-      console.log(temp);
       setfirstname(temp.first_name);
       setlastname(temp.last_name);
       if (temp.contactno === undefined) {
@@ -89,12 +115,21 @@ function AuthenticatedStack() {
       setcnic(temp.cnic);
       setPickedImagePath(temp.photo);
     } catch (error) {
-      console.log(error.response.data.msg);
+      console.log(error);
     }
   };
   useEffect(() => {
     integratee();
+    get_prime();
   }, []);
+
+  if (!authCtx.isprimary) {
+    return loading ? (
+      <LoadingOverlay message="Please Wait ..." />
+    ) : (
+      <Add_account prime={true} />
+    );
+  }
 
   return (
     <ProfileContext.Provider value={imagesettings}>

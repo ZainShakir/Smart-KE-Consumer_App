@@ -47,6 +47,7 @@ const Input_paper = ({
         onChangeText={onUpdateValue}
         activeOutlineColor={"black"}
         error={isInvalid}
+        autoCapitalize="none"
       />
     </View>
   );

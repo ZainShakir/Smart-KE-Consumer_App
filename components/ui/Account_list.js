@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,15 +9,73 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 
 import { SwipeListView } from "react-native-swipe-list-view";
+import { accounts, setprime } from "../../utils/auth";
+import { AuthContext } from "../../store/auth-context";
+import LottieView from "lottie-react-native";
 
 export default function Basic() {
+  const AuthCtx = useContext(AuthContext);
+  const animation = useRef(null);
+  const [accs, setaccounts] = useState([]);
+  const [loadingdata, setloading] = useState(false);
+
+  const setprimary = async (acc_no) => {
+    const token = AuthCtx.token;
+
+    let isUnmounted = false;
+    try {
+      const response = await setprime(token, acc_no);
+      if (!isUnmounted) {
+        console.log(response.data);
+        getaccounts();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return () => {
+      isUnmounted = true;
+    };
+  };
+
+  const getaccounts = async () => {
+    const token = AuthCtx.token;
+    let isUnmounted = false;
+    try {
+      setloading(true);
+      const response = await accounts(token);
+      if (!isUnmounted) {
+        let temp = [];
+        for (var i = 0; i < response.data.length; i++) {
+          response.data[i]["key"] = `${i}`;
+          temp.push(response.data[i]);
+        }
+        setaccounts(temp);
+        setTimeout(() => {
+          setloading(false);
+        }, 2500);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return () => {
+      isUnmounted = true;
+    };
+  };
+  useEffect(() => {
+    getaccounts();
+  }, []);
+  useEffect(() => {
+    animation.current?.play();
+  }, []);
+
   const [listData, setListData] = useState(
     Array(5)
       .fill("")
       .map((_, i) => ({ key: `${i}`, text: `01023456${i}` }))
   );
 
-  const closeRow = (rowMap, rowKey) => {
+  const closeRow = (rowMap, rowKey, data) => {
+    setprimary(data.item.account_no);
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
@@ -41,22 +99,29 @@ export default function Basic() {
       style={styles.rowFront}
       underlayColor={"#AAA"}
     >
-      <View style={{ flexDirection: "row" }}>
-        <View>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flexDirection: "row" }}>
           <AntDesign
             name="star"
             size={24}
-            color="orange"
+            color={data.item.primary_status ? "lightgreen" : "orange"}
             style={{ paddingTop: "1.5%" }}
           />
+          <View style={{ paddingLeft: "5%" }}>
+            <Text style={{ fontWeight: "500", fontSize: 18 }}>
+              {data.item.acc_name}
+            </Text>
+            <Text style={{ fontSize: 15, fontWeight: "300" }}>
+              ACC No: {data.item.account_no}
+            </Text>
+          </View>
         </View>
-        <View style={{ paddingLeft: "5%" }}>
-          <Text style={{ fontWeight: "500", fontSize: 18 }}>Zain Shakir</Text>
-          <Text style={{ fontSize: 15, fontWeight: "300" }}>
-            ACC No: {data.item.text}
-          </Text>
-        </View>
-        <View style={{ alignSelf: "center", paddingLeft: "40%" }}>
+
+        <View
+          style={{
+            alignSelf: "center",
+          }}
+        >
           <AntDesign name="doubleleft" size={24} color="black" />
         </View>
       </View>
@@ -68,7 +133,7 @@ export default function Basic() {
       <Text>Left</Text>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
-        onPress={() => closeRow(rowMap, data.item.key)}
+        onPress={() => closeRow(rowMap, data.item.key, data)}
       >
         <Text style={styles.backTextWhite}>Set Primary</Text>
       </TouchableOpacity>
@@ -83,17 +148,36 @@ export default function Basic() {
 
   return (
     <View style={styles.container}>
-      <SwipeListView
-        data={listData}
-        renderItem={renderItem}
-        renderHiddenItem={renderHiddenItem}
-        leftOpenValue={75}
-        rightOpenValue={-150}
-        previewRowKey={"0"}
-        previewOpenValue={-40}
-        previewOpenDelay={3000}
-        onRowDidOpen={onRowDidOpen}
-      />
+      {loadingdata ? (
+        <View style={{ alignItems: "center", marginTop: "40%" }}>
+          <LottieView
+            autoPlay
+            loop={loadingdata}
+            ref={(animate) => {
+              animation.current = animate;
+            }}
+            style={{
+              width: 200,
+              height: 200,
+              backgroundColor: "#FFFFFF",
+            }}
+            source={require("../../assets/loading1.json")}
+          />
+        </View>
+      ) : (
+        <SwipeListView
+          data={accs}
+          renderItem={renderItem}
+          renderHiddenItem={renderHiddenItem}
+          leftOpenValue={0}
+          rightOpenValue={-150}
+          previewRowKey={"0"}
+          previewOpenValue={-40}
+          previewOpenDelay={3000}
+          onRowDidOpen={onRowDidOpen}
+          stopLeftSwipe={1}
+        />
+      )}
     </View>
   );
 }

@@ -11,7 +11,7 @@ export async function createUser({
 }) {
   console.log(firstname, lastname, email, password, cnic);
   const response = await axios.post(
-    "http://192.168.10.7:3080/consumer/register",
+    "http://192.168.10.4:3080/consumer/register",
     {
       firstname: firstname,
       lastname: lastname,
@@ -25,7 +25,7 @@ export async function createUser({
 }
 
 export async function loginUser(email, password) {
-  const response = await axios.post("http://192.168.10.7:3080/consumer/login", {
+  const response = await axios.post("http://192.168.10.4:3080/consumer/login", {
     email: email,
     password: password,
   });
@@ -35,7 +35,7 @@ export async function loginUser(email, password) {
 
 export async function ResetPass(email) {
   const response = await axios.post(
-    "http://192.168.10.7:3080/consumer/forgot-pass",
+    "http://192.168.10.4:3080/consumer/forgot-pass",
     {
       email: email,
     }
@@ -45,7 +45,7 @@ export async function ResetPass(email) {
 
 export async function GetDetails(token) {
   const response = await axios.get(
-    `http://192.168.10.7:3080/consumer/useprofile`,
+    `http://192.168.10.4:3080/consumer/useprofile`,
     {
       headers: {
         "x-access-token": token,
@@ -57,7 +57,7 @@ export async function GetDetails(token) {
 
 export async function EditProfile(token, first_name, last_name, contact_no) {
   const response = await axios.patch(
-    `http://192.168.10.7:3080/consumer/editprofile`,
+    `http://192.168.10.4:3080/consumer/editprofile`,
     { first_name: first_name, last_name: last_name, contact_no: contact_no },
     {
       headers: {
@@ -69,10 +69,79 @@ export async function EditProfile(token, first_name, last_name, contact_no) {
 }
 
 export async function EditPicture(token, img) {
-  console.log(token);
   const response = await axios.patch(
-    `http://192.168.10.7:3080/consumer/editprofile`,
+    `http://192.168.10.4:3080/consumer/editprofile`,
     { photo: img },
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+  return response;
+}
+
+export async function check_prime(token) {
+  const response = await axios.get(
+    `http://192.168.10.4:3080/account/checkprime`,
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+
+  return response;
+}
+
+export async function get_prime(token) {
+  const response = await axios.get(
+    `http://192.168.10.4:3080/account/paccount`,
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+
+  return response;
+}
+
+export async function add_acc(token, account_no, name, status) {
+  const response = await axios.post(
+    `http://192.168.10.4:3080/account/addaccount`,
+    {
+      account_no: account_no,
+      status: status,
+      name: name,
+    },
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+  return response;
+}
+
+export async function accounts(token) {
+  const response = await axios.get(
+    `http://192.168.10.4:3080/account/saccount`,
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+  return response;
+}
+
+export async function setprime(token, acc_no) {
+  const response = await axios.patch(
+    `http://192.168.10.4:3080/account/setprime`,
+    {
+      acc_no: acc_no,
+    },
     {
       headers: {
         "x-access-token": token,

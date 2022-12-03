@@ -10,7 +10,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MaterialCommunityIcons,
   Entypo,

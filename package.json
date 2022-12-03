@@ -44,7 +44,8 @@
     "react-native-svg": "^12.3.0",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-swipeable": "^0.6.0",
-    "react-native-tab-view": "^3.3.0"
+    "react-native-tab-view": "^3.3.0",
+    "rive-react-native": "^3.0.41"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
