@@ -13,7 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import ProgressBar from "react-native-progress/Bar";
 
-const Card = () => {
+const Card = (props) => {
   const [progress, setProgress] = useState(1);
   return (
     <View style={styles.container}>

@@ -90,7 +90,7 @@ const DrawerContent = (props) => {
               )}
               label="KE Stocks"
               onPress={() => {
-                alert("Hello");
+                props.navigation.navigate("KE Stocks");
               }}
             />
             <Drawer.Item
@@ -120,7 +120,7 @@ const DrawerContent = (props) => {
           )}
           label="Sign Out"
           onPress={() => {
-            alert("Hello");
+            authCtx.logout();
           }}
         />
       </Drawer.Section>

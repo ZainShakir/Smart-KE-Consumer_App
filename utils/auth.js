@@ -150,3 +150,39 @@ export async function setprime(token, acc_no) {
   );
   return response;
 }
+
+export async function create_complain(
+  token,
+  acc_no,
+  complain_type,
+  Details,
+  affected_area
+) {
+  const response = await axios.post(
+    `http://192.168.10.4:3080/user_complain/create_complain`,
+    {
+      complain_type: complain_type,
+      Details: Details,
+      Account_no: acc_no,
+      affected_area: affected_area,
+    },
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+  return response;
+}
+
+export async function get_complains(token, acc_no) {
+  const response = await axios.get(
+    `http://192.168.10.4:3080/user_complain/get_complains/${acc_no}`,
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+  return response;
+}

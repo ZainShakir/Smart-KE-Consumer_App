@@ -6,12 +6,16 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import Button from "../ui/Button";
-
+import { AuthContext } from "../../store/auth-context";
+import { create_complain } from "../../utils/auth";
 const FaultyMeter = ({ navigation }) => {
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const account_no = authCtx.primary_account;
   const fixed = 100;
   const [selectedImage, setPickedImage] = useState("");
   const [comment, setComment] = useState("");
@@ -25,6 +29,66 @@ const FaultyMeter = ({ navigation }) => {
         break;
     }
   }
+  const [errprompt, seterrprompt] = useState({});
+  const [text, settext] = useState(true);
+  const [credentialsInvalid, setCredentialsInvalid] = useState({
+    commnot: false,
+    imgnot: false,
+  });
+
+  const generate_complain = async () => {
+    try {
+      const response = await create_complain(
+        token,
+        account_no,
+        "Faulty Meter",
+        comment
+      );
+      if (response.status === 200) {
+        alert("Complain Successfully Created");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  function checkcredentials(e1, e2) {
+    var errors = {};
+    const commnot = e1.length < 5;
+    const imgnot = e2 === "";
+    if (e1.length < 5) {
+      errors.comment = "Comments Character Should be greater than 25";
+      settext(true);
+    }
+    if (e2 === "") {
+      errors.image = "Image Proof is required";
+      settext(true);
+    }
+    setCredentialsInvalid({
+      commnot: commnot,
+      imgnot: imgnot,
+    });
+    return errors;
+  }
+
+  const submit = () => {
+    settext(false);
+    seterrprompt(checkcredentials(comment, selectedImage));
+
+    // settext(true);
+  };
+  useEffect(() => {
+    if (!text) {
+      setCredentialsInvalid({
+        commnot: false,
+        imgnot: false,
+      });
+      seterrprompt({});
+      generate_complain();
+      setComment("");
+      settext(true);
+    }
+  }, [text]);
 
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library
@@ -102,10 +166,19 @@ const FaultyMeter = ({ navigation }) => {
               >
                 Select Image From Gallery
               </Text>
-              {imagename ? (
-                <Text style={{ marginTop: "3%" }}>File Name: {imagename}</Text>
-              ) : null}
             </Pressable>
+            {imagename ? (
+              <Text style={{ marginTop: "3%" }}>File Name: {imagename}</Text>
+            ) : null}
+            {credentialsInvalid.imgnot ? (
+              <View style={{ marginTop: "1%" }}>
+                <Text
+                  style={{ color: "red", fontSize: 14, fontWeight: "bold" }}
+                >
+                  {errprompt.image}
+                </Text>
+              </View>
+            ) : null}
           </View>
           <View style={{ paddingVertical: "5%" }}>
             <Text>Comments</Text>
@@ -119,11 +192,20 @@ const FaultyMeter = ({ navigation }) => {
             <Text style={{ marginTop: "3%", fontWeight: "200", fontSize: 13 }}>
               Remainig Characters :{len}
             </Text>
+            {credentialsInvalid.commnot ? (
+              <View style={{ marginTop: "1%" }}>
+                <Text
+                  style={{ color: "red", fontSize: 14, fontWeight: "bold" }}
+                >
+                  {errprompt.comment}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
         <View style={{ marginTop: "10%" }}>
           <Button
-            onPress={() => alert("Hello")}
+            onPress={() => submit()}
             backc={"#F0984A"}
             width={"60%"}
             font={"Outfit"}
@@ -150,7 +232,7 @@ const styles = StyleSheet.create({
   },
   box: {
     marginTop: "10%",
-    height: "50%",
+    height: "55%",
     width: "90%",
     backgroundColor: "white",
     alignSelf: "center",

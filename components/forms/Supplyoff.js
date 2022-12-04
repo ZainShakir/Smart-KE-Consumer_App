@@ -6,16 +6,73 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../ui/Button";
-
+import { create_complain } from "../../utils/auth";
+import { AuthContext } from "../../store/auth-context";
 const Supplyoff = ({ navigation }) => {
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const account_no = authCtx.primary_account;
+
   const fixed = 100;
   const [problem, setProblem] = useState();
   const [comment, setComment] = useState("");
   const [len, setlength] = useState(100);
+  const [errprompt, seterrprompt] = useState({});
+  const [text, settext] = useState(true);
+  const [credentialsInvalid, setCredentialsInvalid] = useState({
+    commnot: false,
+  });
+
+  const generate_complain = async () => {
+    try {
+      const response = await create_complain(
+        token,
+        account_no,
+        "Supply OFF/PMT Complaint",
+        comment
+      );
+      if (response.status === 200) {
+        alert("Complain Successfully Created");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  function checkcredentials(e1) {
+    var errors = {};
+    const commnot = e1.length < 5;
+    if (e1.length < 5) {
+      errors.comment = "Comments Character Should be greater than 25";
+      settext(true);
+    }
+    setCredentialsInvalid({
+      commnot: commnot,
+    });
+    return errors;
+  }
+
+  const submit = () => {
+    settext(false);
+    seterrprompt(checkcredentials(comment));
+    // settext(true);
+  };
+  useEffect(() => {
+    if (!text) {
+      setCredentialsInvalid({
+        commnot: false,
+      });
+      seterrprompt({});
+      generate_complain();
+      setComment("");
+      settext(true);
+    }
+  }, [text]);
+
   function updateInputValueHandler(inputType, enteredValue) {
     switch (inputType) {
       case "comment":
@@ -73,11 +130,20 @@ const Supplyoff = ({ navigation }) => {
             <Text style={{ marginTop: "3%", fontWeight: "200", fontSize: 13 }}>
               Remainig Characters :{len}
             </Text>
+            {credentialsInvalid.commnot ? (
+              <View style={{ marginTop: "1%" }}>
+                <Text
+                  style={{ color: "red", fontSize: 14, fontWeight: "bold" }}
+                >
+                  {errprompt.comment}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
         <View style={{ marginTop: "10%" }}>
           <Button
-            onPress={() => alert("Hello")}
+            onPress={() => submit()}
             backc={"#F0984A"}
             width={"60%"}
             font={"Outfit"}

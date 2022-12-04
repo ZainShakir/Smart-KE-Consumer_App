@@ -27,6 +27,7 @@ export default function Basic() {
       const response = await setprime(token, acc_no);
       if (!isUnmounted) {
         console.log(response.data);
+        AuthCtx.set_account(acc_no);
         getaccounts();
       }
     } catch (error) {

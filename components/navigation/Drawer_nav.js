@@ -7,6 +7,7 @@ import Manage_Accounts from "../../Screens/Manage_Accounts";
 import Manage_Complains from "../../Screens/Manage_Complains";
 import Profile from "../../Screens/Profile";
 import DrawerContent from "./DrawerContent";
+import Stock_screen from "../../Screens/Stock_screen";
 
 // import Testing from "../../Screens/Testing";
 
@@ -29,6 +30,7 @@ const Drawer_nav = () => {
       />
       <Drawer.Screen name="Manage Accounts" component={Manage_Accounts} />
       <Drawer.Screen name="Manage Complains" component={Manage_Complains} />
+      <Drawer.Screen name="KE Stocks" component={Stock_screen} />
       <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
   );

@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useFonts } from "expo-font";
 import { TextInput } from "react-native-paper";
 import { Keyboard } from "react-native";
@@ -34,6 +34,17 @@ const Add_account = () => {
     name: false,
   });
   const AuthCtx = useContext(AuthContext);
+  useEffect(() => {
+    if (!text) {
+      setCredentialsInvalid({
+        account: false,
+        name: false,
+      });
+      seterrprompt({});
+      add_account(acc_no, name);
+      settext(true);
+    }
+  }, [text]);
   const add_account = async (accnum, name) => {
     const token = AuthCtx.token;
 
@@ -59,17 +70,17 @@ const Add_account = () => {
 
     if (e1 === "") {
       errors.account = "Account Number is required";
-      settext(false);
+      settext(true);
     } else if (e1.length < 5 || e1.length > 10) {
       errors.account = "Account number should be between 5 to 10 digits";
-      settext(false);
+      settext(true);
     }
     if (e2 === "") {
       errors.name = "Name Field is required";
-      settext(false);
+      settext(true);
     } else if (e2.length < 5 || e2.length > 15) {
       errors.name = "Name Should be between 5 to 15 characters";
-      settext(false);
+      settext(true);
     }
     setCredentialsInvalid({
       account: accnot,
@@ -83,20 +94,12 @@ const Add_account = () => {
   }
 
   const submit = () => {
-    settext(true);
-
+    settext(false);
     seterrprompt(checkcredentials(acc_no, name));
 
-    if (text) {
-      setCredentialsInvalid({
-        account: false,
-        name: false,
-      });
-      seterrprompt({});
-      add_account(acc_no, name);
-    }
     // settext(true);
   };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>

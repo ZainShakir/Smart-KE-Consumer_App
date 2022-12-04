@@ -77,6 +77,7 @@ const Home = ({ navigation }) => {
         setacc(temp.acc_name);
         setAddress(temp.c_address);
         set_accno(temp.account_no);
+        authCtx.set_account(temp.account_no);
       }
       setloader1(false);
     } catch (error) {

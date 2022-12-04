@@ -90,16 +90,16 @@ const Profile = ({ navigation }) => {
 
     if (e1 === "") {
       errors.firstname = "FirstName is required";
-      settext(false);
+      settext(true);
     }
     if (e2 === "") {
       errors.lastname = "LastName is required";
-      settext(false);
+      settext(true);
     }
     if (e3 === "") {
     } else if (e3.length !== 11 && e3.length > 1) {
       errors.contactno = "contact number must be 11 numbers";
-      settext(false);
+      settext(true);
     }
     setCredentialsInvalid({
       fname: fnamenot,
@@ -110,15 +110,25 @@ const Profile = ({ navigation }) => {
   }
 
   const submit = () => {
-    settext(true);
+    settext(false);
 
     seterrprompt(checkcredentials(firstname, lastname, contactno));
     console.log(credentialsInvalid);
-    if (text) {
-      edit();
-    }
+
     // settext(true);
   };
+  useEffect(() => {
+    if (!text) {
+      setCredentialsInvalid({
+        fname: false,
+        lname: false,
+        contact: false,
+      });
+      seterrprompt({});
+      edit();
+      settext(true);
+    }
+  }, [text]);
   const [show, setshow] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
