@@ -9,6 +9,7 @@ import Profile from "../../Screens/Profile";
 import DrawerContent from "./DrawerContent";
 import Stock_screen from "../../Screens/Stock_screen";
 
+import Bar_chart from "../charts/Bar_chart";
 // import Testing from "../../Screens/Testing";
 
 const Drawer = createDrawerNavigator();
@@ -32,6 +33,7 @@ const Drawer_nav = () => {
       <Drawer.Screen name="Manage Complains" component={Manage_Complains} />
       <Drawer.Screen name="KE Stocks" component={Stock_screen} />
       <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="charts" component={Bar_chart} />
     </Drawer.Navigator>
   );
 };

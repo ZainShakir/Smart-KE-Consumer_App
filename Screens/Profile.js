@@ -39,6 +39,7 @@ const Profile = ({ navigation }) => {
   const edit_image = async () => {
     try {
       const img = profilecontext.pickedImagePath;
+      console.log(img);
       const response = await EditPicture(token, img);
       alert(response.data);
     } catch (error) {

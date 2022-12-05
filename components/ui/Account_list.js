@@ -5,13 +5,16 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   View,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 import { SwipeListView } from "react-native-swipe-list-view";
-import { accounts, setprime } from "../../utils/auth";
+import { accounts, delete_acc, setprime } from "../../utils/auth";
 import { AuthContext } from "../../store/auth-context";
 import LottieView from "lottie-react-native";
+import { RootSiblingParent } from "react-native-root-siblings";
+import Toast from "react-native-root-toast";
 
 export default function Basic() {
   const AuthCtx = useContext(AuthContext);
@@ -65,6 +68,28 @@ export default function Basic() {
   useEffect(() => {
     getaccounts();
   }, []);
+
+  const delete_account = async (acc_no, rowKey) => {
+    const token = AuthCtx.token;
+    try {
+      const response = await delete_acc(token, acc_no);
+      const newData = [...accs];
+      const prevIndex = listData.findIndex((item) => item.key === rowKey);
+      newData.splice(prevIndex, 1);
+      setaccounts(newData);
+      Toast.show("Account Successfully Deleted", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+      return true;
+    } catch (error) {
+      alert(error.response.data);
+      return false;
+    }
+  };
+
   useEffect(() => {
     animation.current?.play();
   }, []);
@@ -82,12 +107,12 @@ export default function Basic() {
     }
   };
 
-  const deleteRow = (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex((item) => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setListData(newData);
+  const deleteRow = (rowMap, rowKey, data) => {
+    if (data.item.primary_status == true) {
+      Alert.alert("Warning", "Primary Account Can not be deleted");
+    } else {
+      delete_account(data.item.account_no, rowKey);
+    }
   };
 
   const onRowDidOpen = (rowKey) => {
@@ -140,7 +165,7 @@ export default function Basic() {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => deleteRow(rowMap, data.item.key)}
+        onPress={() => deleteRow(rowMap, data.item.key, data)}
       >
         <Text style={styles.backTextWhite}>Delete</Text>
       </TouchableOpacity>
@@ -149,36 +174,40 @@ export default function Basic() {
 
   return (
     <View style={styles.container}>
-      {loadingdata ? (
-        <View style={{ alignItems: "center", marginTop: "40%" }}>
-          <LottieView
-            autoPlay
-            loop={loadingdata}
-            ref={(animate) => {
-              animation.current = animate;
-            }}
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: "#FFFFFF",
-            }}
-            source={require("../../assets/loading1.json")}
+      <RootSiblingParent>
+        {loadingdata ? (
+          <View style={{ alignItems: "center", marginTop: "40%" }}>
+            <LottieView
+              autoPlay
+              loop={loadingdata}
+              ref={(animate) => {
+                animation.current = animate;
+              }}
+              style={{
+                width: 200,
+                height: 200,
+                backgroundColor: "#FFFFFF",
+              }}
+              source={require("../../assets/loading1.json")}
+            />
+          </View>
+        ) : (
+          <SwipeListView
+            data={accs}
+            renderItem={renderItem}
+            renderHiddenItem={renderHiddenItem}
+            leftOpenValue={0}
+            rightOpenValue={-150}
+            previewRowKey={"0"}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            onRowDidOpen={onRowDidOpen}
+            stopLeftSwipe={1}
+            refreshing={loadingdata}
+            onRefresh={getaccounts}
           />
-        </View>
-      ) : (
-        <SwipeListView
-          data={accs}
-          renderItem={renderItem}
-          renderHiddenItem={renderHiddenItem}
-          leftOpenValue={0}
-          rightOpenValue={-150}
-          previewRowKey={"0"}
-          previewOpenValue={-40}
-          previewOpenDelay={3000}
-          onRowDidOpen={onRowDidOpen}
-          stopLeftSwipe={1}
-        />
-      )}
+        )}
+      </RootSiblingParent>
     </View>
   );
 }

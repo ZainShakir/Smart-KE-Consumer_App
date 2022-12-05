@@ -27,6 +27,8 @@ const Add_account = () => {
     Roboto_m: require("../../assets/fonts/RobotoSlab-Medium.ttf"),
     Roboto_b: require("../../assets/fonts/RobotoSlab-Black.ttf"),
   });
+  const [errprompt, seterrprompt] = useState({});
+  const [text, settext] = useState(true);
   const [acc_no, setacc] = useState("");
   const [name, setname] = useState("");
   const [credentialsInvalid, setCredentialsInvalid] = useState({
@@ -61,8 +63,13 @@ const Add_account = () => {
     }
   };
 
-  const [errprompt, seterrprompt] = useState({});
-  const [text, settext] = useState(true);
+  const submit = () => {
+    settext(false);
+    seterrprompt(checkcredentials(acc_no, name));
+
+    // settext(true);
+  };
+
   function checkcredentials(e1, e2) {
     var errors = {};
     const accnot = e1 === "" || e1.length < 5 || e1.length > 10;
@@ -92,13 +99,6 @@ const Add_account = () => {
   if (!loaded) {
     return null;
   }
-
-  const submit = () => {
-    settext(false);
-    seterrprompt(checkcredentials(acc_no, name));
-
-    // settext(true);
-  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

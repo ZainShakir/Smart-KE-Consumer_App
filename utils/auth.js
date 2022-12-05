@@ -186,3 +186,18 @@ export async function get_complains(token, acc_no) {
   );
   return response;
 }
+
+export async function delete_acc(token, acc_no) {
+  const response = await axios.delete(
+    `http://192.168.10.4:3080/account/daccount`,
+    {
+      headers: {
+        "x-access-token": token,
+      },
+      data: {
+        acc_no: acc_no,
+      },
+    }
+  );
+  return response.data;
+}
