@@ -24,7 +24,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { get_prime, add_acc } from "../utils/auth";
 import Add_account from "../components/forms/Add_account";
 import axios from "axios";
-
+import { ENV_STRIPE_KEY, ENV_IP } from "@env";
 import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
 
 const Home = ({ navigation }) => {
@@ -35,10 +35,8 @@ const Home = ({ navigation }) => {
   const [acc_no, set_accno] = useState("");
   const [loader1, setloader1] = useState(false);
   const [bill, setBill] = useState();
-
   const [name, setname] = useState("");
   const [accnum, setaccnum] = useState("");
-
   function submit(credentials) {
     let { accnum, name } = credentials;
     accnum = accnum.trim();
@@ -112,7 +110,7 @@ const Home = ({ navigation }) => {
       // console.log(finalAmount);
       if (finalAmount < 1)
         return Alert.alert("You Bill Amount Should be greater than 1");
-      const response = await fetch("http://192.168.10.4:5000/pay_bill", {
+      const response = await fetch(`http://${ENV_IP}:5000/pay_bill`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -315,7 +313,7 @@ const Home = ({ navigation }) => {
               <Text style={{ color: "red", fontSize: 12, marginTop: 5 }}>
                 Due Date:12/05/2020
               </Text>
-              <StripeProvider publishableKey="pk_test_51M4Q9GJbyEqQzB0WiFHVQrrz0n7UN4Uo4iz2WUdAE0lsDLt48ssvQEfurZaQPXt1JOw26TZxtGvgtOD5MzRQmYU300QBTgjXXI">
+              <StripeProvider publishableKey={`${ENV_STRIPE_KEY}`}>
                 <Pressable
                   style={styles.button}
                   onPress={() => bill_payment(11200)}
