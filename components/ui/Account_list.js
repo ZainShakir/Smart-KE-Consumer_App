@@ -74,7 +74,7 @@ export default function Basic() {
     try {
       const response = await delete_acc(token, acc_no);
       const newData = [...accs];
-      const prevIndex = listData.findIndex((item) => item.key === rowKey);
+      const prevIndex = accs.findIndex((item) => item.key === rowKey);
       newData.splice(prevIndex, 1);
       setaccounts(newData);
       Toast.show("Account Successfully Deleted", {

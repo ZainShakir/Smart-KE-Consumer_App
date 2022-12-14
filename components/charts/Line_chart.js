@@ -3,7 +3,7 @@ import React from "react";
 import { LineChart } from "react-native-gifted-charts";
 
 const Line_chart = (props) => {
-  const { fact1, fact2 } = props;
+  const { fact1, fact2, factor1label, factor2label } = props;
 
   return (
     <View>
@@ -26,6 +26,9 @@ const Line_chart = (props) => {
         textFontSize={13}
         showFractionalValues
         maxValue={1}
+        pressEnabled
+        showStripOnPress
+        showTextOnPress
       />
     </View>
   );

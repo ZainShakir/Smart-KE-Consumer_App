@@ -25,6 +25,7 @@ import { AuthContext } from "../store/auth-context";
 
 const Profile = ({ navigation }) => {
   const authCtx = useContext(AuthContext);
+  const [EditPhoto, SetPhoto] = useState("data:image/jpg;base64,null");
   const token = authCtx.token;
   const edit = async () => {
     try {
@@ -38,6 +39,7 @@ const Profile = ({ navigation }) => {
   };
   const edit_image = async () => {
     try {
+      SetPhoto(profilecontext.pickedImagePath);
       const img = profilecontext.pickedImagePath;
       console.log(img);
       const response = await EditPicture(token, img);
@@ -52,6 +54,7 @@ const Profile = ({ navigation }) => {
     setcontactno(profilecontext.contactno);
     setcnic(profilecontext.cnic);
     setEmail(profilecontext.email);
+    SetPhoto(profilecontext.pickedImagePath);
   }, []);
   useEffect(() => {}, [errprompt]);
   const [credentialsInvalid, setCredentialsInvalid] = useState({
@@ -70,8 +73,8 @@ const Profile = ({ navigation }) => {
   const [errprompt, seterrprompt] = useState({});
 
   const showImagePicker = async () => {
-    profilecontext.setimageset(true);
-    profilecontext.setPickedImagePath(null);
+    // profilecontext.setimageset(true);
+    // profilecontext.setPickedImagePath(null);
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
@@ -140,7 +143,7 @@ const Profile = ({ navigation }) => {
         <Entypo name="menu" size={26} color="black" />
       </Pressable>
       <View style={{ flex: 0.4, alignItems: "center", marginTop: "4%" }}>
-        {profilecontext.pickedImagePath !== null ? (
+        {profilecontext.pickedImagePath !== "data:image/jpg;base64,null" ? (
           <Avatar.Image
             size={100}
             source={{
@@ -289,7 +292,8 @@ const Profile = ({ navigation }) => {
         <View style={styles.modal_body}>
           <View style={styles.body1}>
             <View style={{ alignItems: "center", marginTop: "5%" }}>
-              {profilecontext.pickedImagePath !== null ? (
+              {profilecontext.pickedImagePath !==
+              "data:image/jpg;base64,null" ? (
                 <Avatar.Image
                   size={100}
                   source={{
@@ -318,7 +322,7 @@ const Profile = ({ navigation }) => {
               style={styles.button}
               onPress={() => {
                 profilecontext.setimageset(false);
-                profilecontext.setPickedImagePath(null);
+                profilecontext.setPickedImagePath("data:image/jpg;base64,null");
               }}
             >
               <Text style={styles.text}>Remove Photo</Text>
@@ -356,7 +360,11 @@ const Profile = ({ navigation }) => {
               marginBottom: "3%",
               height: "5%",
             }}
-            onPress={() => setshow(false)}
+            onPress={() => {
+              profilecontext.setimageset(true);
+              profilecontext.setPickedImagePath(EditPhoto);
+              setshow(false);
+            }}
           >
             <Text
               style={{

@@ -3,103 +3,119 @@ import React from "react";
 import { BarChart } from "react-native-gifted-charts";
 
 const Bar_chart = (props) => {
-  const { fact1, fact2 } = props;
+  const { fact1, fact2, factor1label, factor2label } = props;
+
   const barData = [
     {
-      value: 40,
+      value: fact1[0].value,
 
-      label: "Jan",
+      label: fact1[0].label,
 
       spacing: 2,
 
-      labelWidth: 30,
+      labelWidth: 40,
 
       labelTextStyle: { color: "gray" },
 
       frontColor: "#177AD5",
     },
 
-    { value: 20, frontColor: "#ED6665" },
+    { value: fact2[0].value, frontColor: "#ED6665" },
 
     {
-      value: 50,
+      value: fact1[1].value,
 
-      label: "Feb",
+      label: fact1[1].label,
 
       spacing: 2,
 
-      labelWidth: 30,
+      labelWidth: 40,
 
       labelTextStyle: { color: "gray" },
 
       frontColor: "#177AD5",
     },
 
-    { value: 40, frontColor: "#ED6665" },
+    { value: fact2[1].value, frontColor: "#ED6665" },
 
     {
-      value: 75,
+      value: fact1[2].value,
 
-      label: "Mar",
+      label: fact1[2].label,
 
       spacing: 2,
 
-      labelWidth: 30,
+      labelWidth: 40,
 
       labelTextStyle: { color: "gray" },
 
       frontColor: "#177AD5",
     },
 
-    { value: 25, frontColor: "#ED6665" },
+    { value: fact2[2].value, frontColor: "#ED6665" },
 
     {
-      value: 30,
+      value: fact1[3].value,
 
-      label: "Apr",
+      label: fact1[3].label,
 
       spacing: 2,
 
-      labelWidth: 30,
+      labelWidth: 40,
 
       labelTextStyle: { color: "gray" },
 
       frontColor: "#177AD5",
     },
 
-    { value: 20, frontColor: "#ED6665" },
+    { value: fact2[3].value, frontColor: "#ED6665" },
 
     {
-      value: 60,
+      value: fact1[4].value,
 
-      label: "May",
+      label: fact1[4].label,
 
       spacing: 2,
 
-      labelWidth: 30,
+      labelWidth: 40,
 
       labelTextStyle: { color: "gray" },
 
       frontColor: "#177AD5",
     },
 
-    { value: 40, frontColor: "#ED6665" },
+    { value: fact2[4].value, frontColor: "#ED6665" },
 
     {
-      value: 65,
+      value: fact1[5].value,
 
-      label: "Jun",
+      label: fact1[5].label,
 
       spacing: 2,
 
-      labelWidth: 30,
+      labelWidth: 40,
 
       labelTextStyle: { color: "gray" },
 
       frontColor: "#177AD5",
     },
 
-    { value: 30, frontColor: "#ED6665" },
+    { value: fact2[5].value, frontColor: "#ED6665" },
+    {
+      value: fact1[6].value,
+
+      label: fact1[6].label,
+
+      spacing: 2,
+
+      labelWidth: 40,
+
+      labelTextStyle: { color: "gray" },
+
+      frontColor: "#177AD5",
+    },
+
+    { value: fact2[6].value, frontColor: "#ED6665" },
   ];
 
   const renderTitle = () => {
@@ -116,7 +132,7 @@ const Bar_chart = (props) => {
             textAlign: "center",
           }}
         >
-          Chart title goes here
+          Bar Chart Analysis
         </Text>
 
         <View
@@ -156,7 +172,7 @@ const Bar_chart = (props) => {
                 color: "lightgray",
               }}
             >
-              Point 01
+              {factor1label}
             </Text>
           </View>
 
@@ -184,7 +200,7 @@ const Bar_chart = (props) => {
                 color: "lightgray",
               }}
             >
-              Point 02
+              {factor2label}
             </Text>
           </View>
         </View>
@@ -206,16 +222,17 @@ const Bar_chart = (props) => {
 
       <BarChart
         data={barData}
-        barWidth={8}
-        spacing={24}
+        barWidth={15}
+        spacing={20}
         roundedTop
         roundedBottom
         hideRules
         xAxisThickness={0}
-        yAxisThickness={0}
+        yAxisThickness={3}
         yAxisTextStyle={{ color: "gray" }}
-        noOfSections={3}
-        maxValue={75}
+        noOfSections={5}
+        maxValue={1}
+        showFractionalValues
       />
     </View>
   );

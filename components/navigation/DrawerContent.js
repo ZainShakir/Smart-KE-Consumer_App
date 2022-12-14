@@ -30,7 +30,8 @@ const DrawerContent = (props) => {
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
             <View style={{ flexDirection: "row", marginTop: 15 }}>
-              {profilecontext.pickedImagePath !== null ? (
+              {profilecontext.pickedImagePath !==
+              "data:image/jpg;base64,null" ? (
                 <Avatar.Image
                   size={50}
                   source={{

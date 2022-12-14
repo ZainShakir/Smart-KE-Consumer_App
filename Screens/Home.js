@@ -23,6 +23,7 @@ import Graph from "../components/ui/Graph";
 import { FontAwesome } from "@expo/vector-icons";
 import { get_prime, add_acc } from "../utils/auth";
 import Add_account from "../components/forms/Add_account";
+import axios from "axios";
 
 import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
 
@@ -33,6 +34,7 @@ const Home = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [acc_no, set_accno] = useState("");
   const [loader1, setloader1] = useState(false);
+  const [bill, setBill] = useState();
 
   const [name, setname] = useState("");
   const [accnum, setaccnum] = useState("");
@@ -67,6 +69,19 @@ const Home = ({ navigation }) => {
     }
   }
 
+  const sad = async (account) => {
+    await axios
+      .get(
+        `https://k190178azurefunction20221023145329.azurewebsites.net/api/K190178Factorial?account=${account}`
+      )
+      .then(function (response) {
+        setBill(response.data.bill);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const get_prime1 = async () => {
     const token = authCtx.token;
     try {
@@ -78,6 +93,7 @@ const Home = ({ navigation }) => {
         setAddress(temp.c_address);
         set_accno(temp.account_no);
         authCtx.set_account(temp.account_no);
+        sad(temp.account_no);
       }
       setloader1(false);
     } catch (error) {
@@ -285,9 +301,17 @@ const Home = ({ navigation }) => {
             <View style={styles.box}>
               <Text>Amount Payable</Text>
               <Text style={{ fontWeight: "600" }}>PKR</Text>
-              <Text style={{ fontWeight: "200", fontSize: 16, marginTop: 5 }}>
-                11,200.00
-              </Text>
+              {bill ? (
+                <Text style={{ fontWeight: "200", fontSize: 16, marginTop: 5 }}>
+                  {bill}
+                </Text>
+              ) : (
+                <ActivityIndicator
+                  size="small"
+                  color="green"
+                  style={{ paddingLeft: 20 }}
+                />
+              )}
               <Text style={{ color: "red", fontSize: 12, marginTop: 5 }}>
                 Due Date:12/05/2020
               </Text>

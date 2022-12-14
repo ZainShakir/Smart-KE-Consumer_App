@@ -30,7 +30,11 @@ const Drawer_nav = () => {
         options={{ unmountOnBlur: true }}
       />
       <Drawer.Screen name="Manage Accounts" component={Manage_Accounts} />
-      <Drawer.Screen name="Manage Complains" component={Manage_Complains} />
+      <Drawer.Screen
+        name="Manage Complains"
+        component={Manage_Complains}
+        options={{ unmountOnBlur: true }}
+      />
       <Drawer.Screen name="KE Stocks" component={Stock_screen} />
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="charts" component={Bar_chart} />

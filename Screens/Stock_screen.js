@@ -32,6 +32,7 @@ const Stock_screen = ({ navigation }) => {
   const [selectedfactor2, setSelectedFactor2] = useState([]);
   const [factor1, setfactor1] = useState();
   const [factor2, setfactor2] = useState();
+  const [predicted, setPredicted] = useState();
   const [loaded] = useFonts({
     Montserrat_m: require("../assets/fonts/Montserrat/static/Montserrat-Medium.ttf"),
   });
@@ -85,11 +86,22 @@ const Stock_screen = ({ navigation }) => {
         console.log("Failed to retrieve Yearly Aggregate data");
       });
   }
+  async function predicted_value() {
+    await axios
+      .get(`http://192.168.10.7:9000/predictvalue`)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log("Failed to retrieve Yearly Aggregate data");
+      });
+  }
 
   const submit = () => {
     if (factor1 && factor2) {
       getcorrelation(factor1, factor2);
       getYearVisuals(factor1, factor2);
+      predicted_value();
     } else {
       alert("Please Select Valid Fields");
     }
@@ -228,7 +240,12 @@ const Stock_screen = ({ navigation }) => {
             }}
           >
             {selectedfactor1.length > 0 && selectedfactor2.length > 0 ? (
-              <Line_chart fact1={selectedfactor1} fact2={selectedfactor2} />
+              <Line_chart
+                fact1={selectedfactor1}
+                fact2={selectedfactor2}
+                factor1label={factor1}
+                factor2label={factor2}
+              />
             ) : null}
           </View>
           <View
@@ -237,7 +254,12 @@ const Stock_screen = ({ navigation }) => {
             }}
           >
             {selectedfactor1.length > 0 && selectedfactor2.length > 0 ? (
-              <Bar_chart fact1={selectedfactor1} fact2={selectedfactor2} />
+              <Bar_chart
+                fact1={selectedfactor1}
+                fact2={selectedfactor2}
+                factor1label={factor1}
+                factor2label={factor2}
+              />
             ) : null}
           </View>
         </ScrollView>
