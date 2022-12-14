@@ -33,6 +33,7 @@ const Profile = ({ navigation }) => {
       profilecontext.setfirstname(firstname);
       profilecontext.setlastname(lastname);
       profilecontext.setcontactno(contactno);
+      alert(response.data);
     } catch (error) {
       alert(error.response.data.msg);
     }

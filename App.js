@@ -105,10 +105,11 @@ function AuthenticatedStack() {
       const temp = response.data[0];
       setfirstname(temp.first_name);
       setlastname(temp.last_name);
-      if (temp.contactno === undefined) {
+
+      if (temp.contact_no === undefined) {
         setcontactno("");
       } else {
-        setcontactno(temp.contactno);
+        setcontactno(temp.contact_no);
       }
 
       setEmail(temp.email);
