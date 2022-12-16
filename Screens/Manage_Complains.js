@@ -24,6 +24,14 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../store/auth-context";
 import { get_complains } from "../utils/auth";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+const Tab = createMaterialTopTabNavigator();
+import PendingComplains from "../components/complains_list/PendingComplains";
+import Billing_Complain from "./Billing_Complain";
+import Electricity_complain from "./Electricity_complain";
+import ProgressComplains from "../components/complains_list/ProgressComplains";
+import ResolvedComplains from "../components/complains_list/ResolvedComplains";
+import ComplaintDiary from "../components/complains_list/ComplaintDiary";
 
 const Manage_Complains = ({ navigation }) => {
   const [filteredData, setfilteredData] = useState([]);
@@ -104,71 +112,21 @@ const Manage_Complains = ({ navigation }) => {
             </Text>
           </View>
           <View style={styles.body}>
-            <View
-              style={{
-                alignSelf: "center",
-                marginTop: "5%",
-              }}
-            >
-              <Input
-                placeholder="Search"
-                variant="filled"
-                value={search}
-                onChangeText={setSearch}
-                width="90%"
-                borderRadius="10"
-                py="3"
-                px="2"
-                fontSize="15"
-                InputLeftElement={
-                  <Icon
-                    ml="2"
-                    size="4"
-                    color="gray.400"
-                    as={<Ionicons name="ios-search" />}
-                  />
-                }
+            <Tab.Navigator keyboardDismissMode="on-drag">
+              <Tab.Screen name="Complain Diary" component={ComplaintDiary} />
+              <Tab.Screen
+                name="Pending Complain"
+                component={PendingComplains}
               />
-            </View>
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: "#dcdcdc",
-                marginTop: "3%",
-              }}
-            />
-            {loadingdata ? (
-              <View style={{ alignItems: "center", marginTop: "40%" }}>
-                <LottieView
-                  autoPlay
-                  loop={loadingdata}
-                  ref={(animate) => {
-                    animation.current = animate;
-                  }}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    backgroundColor: "#FFFFFF",
-                  }}
-                  source={require("../assets/loading1.json")}
-                />
-              </View>
-            ) : (
-              <View
-                style={{ alignItems: "center", marginTop: "5%", width: "100%" }}
-              >
-                {/* <Card /> */}
-                <FlatList
-                  data={complain}
-                  keyExtractor={(Item, index) => index.toString()}
-                  ItemSeparatorComponent={ItemSeparatorView}
-                  renderItem={ItemView}
-                  maxToRenderPerBatch={5}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
-            )}
+              <Tab.Screen
+                name="On-Progress Complain"
+                component={ProgressComplains}
+              />
+              <Tab.Screen
+                name="Resolved Complain"
+                component={ResolvedComplains}
+              />
+            </Tab.Navigator>
           </View>
         </ImageBackground>
       </View>
