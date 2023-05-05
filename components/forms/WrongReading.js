@@ -38,7 +38,9 @@ const WrongReading = ({ navigation }) => {
         "Wrong Reading",
         comment
       );
-      if (response.status === 200) {
+      if (response.status == 201) {
+        alert(response.data);
+      } else {
         alert("Complain Successfully Created");
       }
     } catch (error) {
@@ -48,9 +50,9 @@ const WrongReading = ({ navigation }) => {
 
   function checkcredentials(e1, e2) {
     var errors = {};
-    const commnot = e1.length < 25;
+    const commnot = e1.length < 5;
     const imgnot = e2 === "";
-    if (e1.length < 25) {
+    if (e1.length < 5) {
       errors.comment = "Comments Character Should be greater than 25";
       settext(true);
     }

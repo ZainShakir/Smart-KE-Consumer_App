@@ -107,19 +107,6 @@ const DrawerContent = (props) => {
                 props.navigation.navigate("Profile");
               }}
             />
-            <Drawer.Item
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="account-outline"
-                  size={size}
-                  color={color}
-                />
-              )}
-              label="charts"
-              onPress={() => {
-                props.navigation.navigate("charts");
-              }}
-            />
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>

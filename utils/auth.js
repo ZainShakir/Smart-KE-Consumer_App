@@ -190,3 +190,15 @@ export async function delete_acc(token, acc_no) {
   );
   return response.data;
 }
+
+export async function get_count(token, acc_no) {
+  const response = await axios.get(
+    `http://${ENV_IP}:3080/user_complain/get_count/${acc_no}`,
+    {
+      headers: {
+        "x-access-token": token,
+      },
+    }
+  );
+  return response;
+}

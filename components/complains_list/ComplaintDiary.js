@@ -1,11 +1,43 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React from "react";
-
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../store/auth-context";
+import { get_count } from "../../utils/auth";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const ComplaintDiary = () => {
+  const authCtx = useContext(AuthContext);
+  const [TotalComplain, setTotalComplain] = useState("");
+  const [PendingComplain, setPendingComplain] = useState("");
+  const [loadingdata, setloading] = useState(false);
+
+  const gettotal = async () => {
+    const token = authCtx.token;
+    const acc_no = authCtx.primary_account;
+    let isUnmounted = false;
+    try {
+      setloading(true);
+
+      const response = await get_count(token, acc_no);
+      if (!isUnmounted) {
+        setTotalComplain(response.data.total_complain);
+        setPendingComplain(response.data.pending_complain);
+        setTimeout(() => {
+          setloading(false);
+        }, 2500);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    return () => {
+      isUnmounted = true;
+    };
+  };
+  useEffect(() => {
+    gettotal();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View
@@ -27,20 +59,20 @@ const ComplaintDiary = () => {
       </View>
       <View style={styles.box}>
         <Text style={{ color: "#14A2F9", fontSize: 30, fontWeight: "600" }}>
-          24
+          {TotalComplain}
         </Text>
         <Text style={{ color: "#14A2F9", fontSize: 18 }}>Total Complaints</Text>
       </View>
       <View style={{ flexDirection: "row" }}>
         <View style={styles.smallbox}>
           <Text style={{ color: "#FCD633", fontSize: 30, fontWeight: "600" }}>
-            4
+            {PendingComplain}
           </Text>
           <Text style={{ color: "#FCD633", fontSize: 18 }}>Pending</Text>
         </View>
         <View style={styles.smallbox}>
           <Text style={{ color: "green", fontSize: 30, fontWeight: "600" }}>
-            1
+            0
           </Text>
           <Text style={{ color: "green", fontSize: 18 }}>In-Progress</Text>
         </View>

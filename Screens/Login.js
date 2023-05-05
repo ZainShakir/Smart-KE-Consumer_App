@@ -7,11 +7,9 @@ import {
   Image,
   Alert,
 } from "react-native";
-import Input_paper from "../components/ui/Input_paper";
-import Flat_button from "../components/ui/Flat_button";
+
 import React, { useContext, useState } from "react";
-import { useFonts } from "expo-font";
-import Button from "../components/ui/Button";
+
 import LoginForm from "../components/forms/LoginForm";
 import { AuthContext } from "../store/auth-context";
 import LoadingOverlay from "../components/ui/LoadingOverlay";

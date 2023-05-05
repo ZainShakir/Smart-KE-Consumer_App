@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../store/auth-context";
+import { useFonts } from "expo-font";
 import {
   MaterialCommunityIcons,
   Entypo,
@@ -42,8 +43,8 @@ const Home = ({ navigation }) => {
     accnum = accnum.trim();
     name = name.trim();
 
-    const numberisValid = accnum.length > 1;
-    const nameisValid = name.length > 4;
+    const numberisValid = accnum.length > 1 && accnum.length < 15;
+    const nameisValid = name.length > 3 && name.length < 15;
     if (!numberisValid || !nameisValid) {
       Alert.alert("Invalid input", "Please check your entered credentials.");
       return;
@@ -143,6 +144,14 @@ const Home = ({ navigation }) => {
       Alert.alert("Payment failed!");
     }
   };
+  const [loaded] = useFonts({
+    Montserrat_b: require("../assets/fonts/Montserrat/static/Montserrat-Bold.ttf"),
+    Mon: require("../assets/fonts/Montserrat/static/Montserrat-SemiBold.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -168,8 +177,14 @@ const Home = ({ navigation }) => {
             </Pressable>
           </View>
           <View style={{ paddingHorizontal: "5%", paddingTop: "5%" }}>
-            <Text style={{ fontSize: 24 }}>
-              Hello{" "}
+            <Text
+              style={{
+                fontSize: 24,
+
+                fontFamily: "Montserrat_b",
+              }}
+            >
+              Hello ,{" "}
               {loader1 ? (
                 <ActivityIndicator
                   size="small"
@@ -181,7 +196,7 @@ const Home = ({ navigation }) => {
               )}
             </Text>
             <View style={{ height: "10%" }} />
-            <Text style={{ fontSize: 20 }}>
+            <Text style={{ fontSize: 20, fontFamily: "Mon" }}>
               Address:{" "}
               {loader1 ? (
                 <ActivityIndicator
@@ -200,8 +215,8 @@ const Home = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={{ fontSize: 20 }}>
-                Account No:
+              <Text style={{ fontSize: 20, fontFamily: "Mon" }}>
+                Account No:{" "}
                 {loader1 ? (
                   <ActivityIndicator
                     size="small"

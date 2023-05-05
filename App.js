@@ -9,6 +9,7 @@ import * as SplashScreen from "expo-splash-screen";
 import ProfileContext from "./store/profile-context";
 import { GetDetails, check_prime } from "./utils/auth";
 import LoadingOverlay from "./components/ui/LoadingOverlay";
+import "./Ignorewarning";
 
 //screens
 import Login from "./Screens/Login";
@@ -25,7 +26,9 @@ import Supplyoff from "./components/forms/Supplyoff";
 import PhaseComplaint from "./components/forms/PhaseComplaint";
 import axios from "axios";
 import Add_account from "./components/forms/Add_account";
-
+import ChatIssues from "./components/forms/ChatIssues";
+import ChatScreen from "./Screens/ChatScreen";
+import ChatWaiting from "./components/ui/ChatWaiting";
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -134,20 +137,58 @@ function AuthenticatedStack() {
 
   return (
     <ProfileContext.Provider value={imagesettings}>
-      <Stack.Navigator
-        initialRouteName="Drawer_nav"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="Drawer_Nav" component={Drawer_nav} />
-        <Stack.Screen name="WrongReading" component={WrongReading} />
-        <Stack.Screen name="FaultyMeter" component={FaultyMeter} />
-        <Stack.Screen name="Wrong_Bill" component={Wrong_Bill} />
-        <Stack.Screen name="Complain" component={Complain} />
-        <Stack.Screen name="Volatge" component={VoltageComplaint} />
-        <Stack.Screen name="Phase" component={PhaseComplaint} />
-        <Stack.Screen name="Supply" component={Supplyoff} />
+      <Stack.Navigator initialRouteName="Drawer_nav">
+        <Stack.Screen
+          name="Drawer_Nav"
+          component={Drawer_nav}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="WrongReading"
+          component={WrongReading}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FaultyMeter"
+          component={FaultyMeter}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Wrong_Bill"
+          component={Wrong_Bill}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Complain"
+          component={Complain}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Volatge"
+          component={VoltageComplaint}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Phase"
+          component={PhaseComplaint}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Supply"
+          component={Supplyoff}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChatIssues"
+          component={ChatIssues}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen
+          name="ChatWait"
+          component={ChatWaiting}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </ProfileContext.Provider>
   );

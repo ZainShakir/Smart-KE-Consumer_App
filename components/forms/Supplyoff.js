@@ -35,7 +35,9 @@ const Supplyoff = ({ navigation }) => {
         "Supply OFF/PMT Complaint",
         comment
       );
-      if (response.status === 200) {
+      if (response.status == 201) {
+        alert(response.data);
+      } else {
         alert("Complain Successfully Created");
       }
     } catch (error) {

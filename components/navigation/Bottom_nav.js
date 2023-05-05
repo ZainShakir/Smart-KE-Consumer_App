@@ -17,6 +17,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Home from "../../Screens/Home";
 import Track from "../../Screens/Track";
 import Complain from "../../Screens/Complain";
+import ChatHome from "../../Screens/ChatHome";
 import { useNavigation } from "@react-navigation/native";
 import Billing from "../../Screens/Billing";
 const Test1 = () => {
@@ -49,7 +50,7 @@ const Bottom_nav = () => {
       case "Account":
         icon = "ios-home-outline";
         break;
-      case "Chat":
+      case "Support":
         icon = "ios-chatbox-ellipses-outline";
         break;
       case "Track Driver":
@@ -145,8 +146,8 @@ const Bottom_nav = () => {
           position="RIGHT"
         />
         <CurvedBottomBar.Screen
-          name="Chat"
-          component={Test2}
+          name="Support"
+          component={ChatHome}
           position="RIGHT"
         />
       </CurvedBottomBar.Navigator>
